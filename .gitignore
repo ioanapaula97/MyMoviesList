@@ -22,6 +22,7 @@
 #Node and Angular
 node_modules/
 package-lock.json
+.angular/
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
