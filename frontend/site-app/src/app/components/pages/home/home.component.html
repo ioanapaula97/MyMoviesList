@@ -1,1 +1,13 @@
 <h1>Welcome HOME</h1>
+
+
+<div class="row">
+  <div *ngFor="let movie of moviesList"class="col-md-2 card m-3">
+      <div class="card-body">
+        <p class="card-title">{{movie.title}}</p>
+        <p class="card-text">{{movie.year}}</p>
+        <img class="card-img" [src]="movie.picture">
+      </div>
+  </div>
+</div>
+
