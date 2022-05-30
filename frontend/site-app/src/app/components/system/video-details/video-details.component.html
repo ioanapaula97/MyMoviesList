@@ -1,0 +1,47 @@
+<div class="row m-3">
+  <div class="col-md-3">
+    <img mat-card-image class="w-100" [src]=filmSelectat.urlImagine [alt]="filmSelectat.titlu + ' imagine'">
+  </div>
+
+  <div class="col-md-9">
+    <h1>
+      <span class="fw-bold">{{filmSelectat.titlu}}</span>
+      <span> ({{filmSelectat.anAparitie}})</span>
+    </h1>
+    <div class="mb-2">
+      <mat-chip-list aria-label="Genuri film">
+        <mat-chip *ngFor="let gen of filmSelectat.genuri">{{gen}}</mat-chip>
+      </mat-chip-list>
+    </div>
+    <div class="mb-2">
+      <mat-chip color="accent" selected>{{filmSelectat.scorReview}}</mat-chip>
+    </div>
+    <div>
+      {{filmSelectat.descriere}}
+    </div>
+
+    <div class="mt-5">
+      <button mat-mini-fab [matTooltip]="getTooltip()" [matTooltipPosition]="'right'"
+              [ngClass]="filmSelectat.esteFavorit ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite">
+        <mat-icon>star</mat-icon>
+      </button>
+
+      <br>
+
+      <mat-form-field appearance="fill" class="mt-3">
+        <mat-label>Movie status: </mat-label>
+        <mat-select [(value)]="filmSelectat.statusFilm">
+          <option value=""></option>
+          <mat-option *ngFor="let option of filmStatusEnum" [value]="option.value">{{option.view}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+

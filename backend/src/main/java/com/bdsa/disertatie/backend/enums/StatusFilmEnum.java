@@ -1,5 +1,5 @@
 package com.bdsa.disertatie.backend.enums;
 
 public enum StatusFilmEnum {
-    VIZIONAT, PLANIFICAT, IN_CURS_DE_VIZIONARE
+    COMPLETED, PLAN_TO_WATCH, WATCHING
 }
