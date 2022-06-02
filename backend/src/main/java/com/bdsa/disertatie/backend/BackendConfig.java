@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 
 @Configuration
 public class BackendConfig {
@@ -16,6 +17,7 @@ public class BackendConfig {
     @PostConstruct
     private void init(){
         LOG.info("init {}", getClass().getSimpleName());
+        LOG.info("LocalDateTime.now= {}", LocalDateTime.now().toString());
     }
 
     @Bean

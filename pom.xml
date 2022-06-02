@@ -19,6 +19,8 @@
 
 	<modules>
 		<module>backend</module>
+		<module>frontend/site-frontend-maven-plugin</module>
+		<module>frontend/site-frontend-webapp</module>
 	</modules>
 
 </project>

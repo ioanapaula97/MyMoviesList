@@ -21,8 +21,8 @@
     </div>
 
     <div class="mt-5">
-      <button mat-mini-fab [matTooltip]="getTooltip()" [matTooltipPosition]="'right'"
-              [ngClass]="filmSelectat.esteFavorit ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite">
+      <button mat-mini-fab [matTooltip]="getTooltip(filmSelectat)" [matTooltipPosition]="'right'"
+              [ngClass]="filmulEsteFavorit(filmSelectat) ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite">
         <mat-icon>star</mat-icon>
       </button>
 

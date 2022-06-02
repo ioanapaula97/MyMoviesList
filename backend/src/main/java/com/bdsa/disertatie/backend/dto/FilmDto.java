@@ -21,5 +21,4 @@ public class FilmDto {
     private Boolean esteFavorit;
     private StatusFilmEnum statusFilm;
     private Integer notaFilm;
-    private FilmWIkiData detaliiFilm;
 }

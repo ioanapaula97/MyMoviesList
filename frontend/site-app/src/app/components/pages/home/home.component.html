@@ -1,7 +1,9 @@
 <h1>Welcome HOME</h1>
 
 
-<app-video-list></app-video-list>
+<app-video-list *ngIf="listaFilmeWikiData"
+                [listaFilmeWikiData]="listaFilmeWikiData"
+></app-video-list>
 
 
 

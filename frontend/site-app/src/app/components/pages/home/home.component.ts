@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {FilmService} from "../../../service/film.service";
+import {UserService} from "../../../service/user.service";
 
 @Component({
   selector: 'app-home',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  listaFilmeWikiData: any[];
+
+  constructor(private filmService: FilmService,
+              private userService: UserService) { }
 
   ngOnInit(): void {
+    this.filmService.getFilmeDupaTopScor().subscribe((resp) => {
+      this.listaFilmeWikiData = resp ? resp : [] ;
+    });
+
+
   }
 
 }

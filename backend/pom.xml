@@ -12,9 +12,9 @@
     <artifactId>backend</artifactId>
 
     <properties>
-        <java.version>1.8</java.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <hibernate-types.version>2.16.2</hibernate-types.version>
         <logger.version>2.7</logger.version>
         <modelmapper.version>3.1.0</modelmapper.version>
@@ -83,6 +83,52 @@
             <artifactId>modelmapper</artifactId>
             <version>${modelmapper.version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-repository-api</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-queryparser-sparql</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-queryresultio-api</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-util</artifactId>-->
+<!--            <version>3.7.7</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-query</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-model</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.eclipse.rdf4j</groupId>-->
+<!--            <artifactId>rdf4j-queryresultio-testsuite</artifactId>-->
+<!--            <version>4.0.1</version>-->
+<!--            <scope>test</scope>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-queryresultio-sparqljson</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.rdf4j</groupId>
+            <artifactId>rdf4j-repository-sparql</artifactId>
+            <version>4.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -101,5 +147,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>include_frontend_jar</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.bdsa.disertatie</groupId>
+                    <artifactId>site-frontend-maven-plugin</artifactId>
+                    <version>${project.version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>
