@@ -44,9 +44,8 @@ export class VideoListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.paginator.initialized.subscribe(() => this.getPagina());
-
     this.getFilmeleUtilizatoruluiCurent();
+    this.paginator.initialized.subscribe(() => this.getPagina());
   }
 
   getPagina() {
@@ -62,15 +61,15 @@ export class VideoListComponent implements OnInit {
   }
 
   getTooltip(film: any): string {
-    return Utils.getTooltipButonFavorite(film, this.coduriFilmeFavorite);
+    return Utils.getTooltipButonFavorite(film.codWikiData, this.coduriFilmeFavorite);
   }
 
   schimbaFavorite(film:any){
     if(this.filmulEsteFavorit(film)){
-      this.filmService.adaugaFilmLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
+      this.filmService.eliminaFilmDeLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     } else {
-      this.filmService.eliminaFilmDeLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
+      this.filmService.adaugaFilmLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     }
 
@@ -81,9 +80,12 @@ export class VideoListComponent implements OnInit {
   }
 
   getFilmeleUtilizatoruluiCurent(){
+    console.log("GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
       this.listaFilmeUtilizator = resp ? resp : [] ;
       this.coduriFilmeFavorite = this.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
+      console.log("listaFilmeUtilizator=", this.listaFilmeUtilizator);
+      console.log("coduriFilmeFavorite=", this.coduriFilmeFavorite);
     });
   }
 
@@ -91,7 +93,7 @@ export class VideoListComponent implements OnInit {
     let coduriFavorite: string[] = [];
 
     if(listaFilmeUtilizator && listaFilmeUtilizator.length > 0){
-      coduriFavorite = listaFilmeUtilizator.filter(f=> f.esteFavorit === true).map(f=> f.codWikiData);
+      coduriFavorite = listaFilmeUtilizator.filter(f=> f.esteFavorit === true).map(f=> f.codWikiData) || [];
     }
 
     return coduriFavorite;

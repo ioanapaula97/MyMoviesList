@@ -120,7 +120,7 @@ public class FilmRestController {
 
         filmService.modificaDetaliiFilm(userId, codFilmWikiData, true, null, null);
 
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/elimina-favorit/{userId}/{codFilmWikiData}")
@@ -129,7 +129,7 @@ public class FilmRestController {
 
         filmService.modificaDetaliiFilm(userId, codFilmWikiData, false, null, null);
 
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/acorda-nota/{userId}/{codFilmWikiData}/{nota}")
@@ -140,17 +140,17 @@ public class FilmRestController {
 
         filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, nota, null);
 
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/schimba-status/{userId}/{codFilmWikiData}")
+    @PostMapping(value = "/schimba-status/{userId}/{codFilmWikiData}/{statusFilm}")
     public ResponseEntity<String> schimbaStatusFilm(@PathVariable Long userId,
                                                     @PathVariable String codFilmWikiData,
-                                                    @PathVariable StatusFilmEnum statusFilmEnum) throws JsonProcessingException {
-        LOG.info("POST Schimba status film userId= {}, codFilmWikiData= {}, status= {}", userId, codFilmWikiData, statusFilmEnum);
+                                                    @PathVariable StatusFilmEnum statusFilm) throws JsonProcessingException {
+        LOG.info("POST Schimba status film userId= {}, codFilmWikiData= {}, status= {}", userId, codFilmWikiData, statusFilm);
 
-        filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, null, statusFilmEnum);
+        filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, null, statusFilm);
 
-        return ResponseEntity.ok().body("ok");
+        return ResponseEntity.ok().build();
     }
 }
