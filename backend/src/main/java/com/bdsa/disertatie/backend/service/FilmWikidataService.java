@@ -33,7 +33,7 @@ public class FilmWikidataService {
 
     public List<FilmWikiData> getFilmeDupaGen(List<String> genuri, TipSortareEnum tipSortare) throws JsonProcessingException {
         String querySPARQL = getQueryStringDupaGenuri(genuri) + getConditieSortare(tipSortare) + LIMITA_FILME;
-        String raspunsJsonString = executaQuerySPQRQL(querySPARQL);
+        String raspunsJsonString = executaQuerySPARQL(querySPARQL);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
@@ -41,7 +41,7 @@ public class FilmWikidataService {
 
     public List<FilmWikiData> getFilmeDupaAnAparitie(Integer an, TipSortareEnum tipSortare) throws JsonProcessingException {
         String querySPARQL = getQueryStringDupaAnAparitie(an) + getConditieSortare(tipSortare) + LIMITA_FILME;
-        String raspunsJsonString = executaQuerySPQRQL(querySPARQL);
+        String raspunsJsonString = executaQuerySPARQL(querySPARQL);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
@@ -49,7 +49,7 @@ public class FilmWikidataService {
 
     public List<FilmWikiData> getFilmeDupaVarstaPermisa(String varsta, TipSortareEnum tipSortare) throws JsonProcessingException {
         String querySPARQL = getQueryStringDupaVarsta(varsta) + getConditieSortare(tipSortare) + LIMITA_FILME;
-        String raspunsJsonString = executaQuerySPQRQL(querySPARQL);
+        String raspunsJsonString = executaQuerySPARQL(querySPARQL);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
@@ -60,7 +60,7 @@ public class FilmWikidataService {
     }
 
     public List<FilmWikiData> getFilmeTopScor () throws JsonProcessingException {
-        String raspunsJsonString = executaQuerySPQRQL(QUERY_FILME_TOP_SCOR);
+        String raspunsJsonString = executaQuerySPARQL(QUERY_FILME_TOP_SCOR);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
@@ -107,7 +107,7 @@ public class FilmWikidataService {
         return CONDITIE_SORTARE_SCOR_DESC;
     }
 
-    private String executaQuerySPQRQL (String querySPQRQL){
+    private String executaQuerySPARQL (String querySPQRQL){
         String sparqlEndpoint = "https://query.wikidata.org/sparql";
         SPARQLRepository repo = new SPARQLRepository(sparqlEndpoint);
 
