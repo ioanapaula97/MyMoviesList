@@ -129,6 +129,11 @@
             <artifactId>rdf4j-repository-sparql</artifactId>
             <version>4.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.microsoft.onnxruntime</groupId>
+            <artifactId>onnxruntime</artifactId>
+            <version>1.11.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -146,6 +151,14 @@
                 </configuration>
             </plugin>
         </plugins>
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <includes>-->
+<!--                    <include>**/*.properties</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
+<!--        </resources>-->
     </build>
 
     <profiles>

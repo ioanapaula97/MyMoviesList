@@ -1,26 +1,23 @@
 package com.bdsa.disertatie.backend.api;
 
+import ai.onnxruntime.OrtException;
 import com.bdsa.disertatie.backend.dto.FilmDto;
 import com.bdsa.disertatie.backend.dto.FilmWikiData;
-import com.bdsa.disertatie.backend.dto.RegExpValidation;
 import com.bdsa.disertatie.backend.enums.StatusFilmEnum;
 import com.bdsa.disertatie.backend.enums.TipSortareEnum;
 import com.bdsa.disertatie.backend.service.FilmService;
 import com.bdsa.disertatie.backend.service.FilmWikidataService;
+import com.bdsa.disertatie.backend.service.ModelQuestionAnsweringService;
+import com.bdsa.disertatie.backend.service.ModelRecomandariService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.eclipse.rdf4j.query.algebra.In;
-import org.eclipse.rdf4j.query.algebra.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import javax.validation.constraints.Pattern;
 
 @RestController
 @RequestMapping(value = "api/v1/film")
@@ -30,11 +27,15 @@ public class FilmRestController {
 
     private final FilmService filmService;
     private final FilmWikidataService filmWikidataService;
+    private final ModelQuestionAnsweringService modelQuestionAnsweringService;
+    private final ModelRecomandariService modelRecomandariService;
 
     @Autowired
-    public FilmRestController(FilmService filmService, FilmWikidataService filmWikidataService) {
+    public FilmRestController(FilmService filmService, FilmWikidataService filmWikidataService, ModelQuestionAnsweringService modelQuestionAnsweringService, ModelRecomandariService modelRecomandariService) {
         this.filmService = filmService;
         this.filmWikidataService = filmWikidataService;
+        this.modelQuestionAnsweringService = modelQuestionAnsweringService;
+        this.modelRecomandariService = modelRecomandariService;
     }
 
 //    @GetMapping(value = "/toate-paginate")
@@ -152,5 +153,21 @@ public class FilmRestController {
         filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, null, statusFilm);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(value = "/model-qa-raspuns-intrebare")
+    public ResponseEntity<String> getRaspunsDinModelMachineLearningQA (@RequestParam(required = false) String intrebare) throws OrtException {
+        LOG.info("GET raspuns intrebare din Model Machine Learning QA , intrebare= {}", intrebare);
+
+
+        return ResponseEntity.ok().body(modelQuestionAnsweringService.getRaspunsIntrebare(intrebare));
+    }
+
+    @GetMapping(value = "/model-recomandari-filme")
+    public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari () throws OrtException {
+        LOG.info("GET filme din Model Machine Learning Recomandari");
+
+
+        return ResponseEntity.ok().body(modelRecomandariService.getRecomandariFilme(););
     }
 }
