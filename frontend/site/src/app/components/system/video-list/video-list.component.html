@@ -1,0 +1,42 @@
+<div class="m-3">
+  <div *ngIf="paginaFilme && listaFilmeUtilizator && coduriFilmeFavorite" class="row">
+    <div *ngFor="let film of paginaFilme" class="col-md-4 mb-3 card-container">
+      <mat-card class="h-100">
+        <mat-card-header class="w-100">
+          <mat-card-title>
+            <mat-chip color="accent" selected>{{film.scorReview}}</mat-chip>
+            <div class="float-end">
+              <button mat-mini-fab [matTooltip]="getTooltip(film)" [matTooltipPosition]="'left'"
+                      [ngClass]="filmulEsteFavorit(film) ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite"
+                      (click)="schimbaFavorite(film)">
+                <mat-icon>star</mat-icon>
+              </button>
+            </div>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <a (click)="setFilmSelectat(film)" [routerLink]="'/detalii-film/' + film.codWikiData" class="card-content">
+            <mat-card-title>{{film.titlu}}</mat-card-title>
+            <mat-card-subtitle>{{film.anAparitie}} ({{film.durata}} minutes)</mat-card-subtitle>
+            <mat-card-subtitle>
+              <mat-chip-list aria-label="Genuri film">
+                <mat-chip *ngFor="let gen of film.genuri">{{gen}}</mat-chip>
+              </mat-chip-list>
+            </mat-card-subtitle>
+            <img mat-card-image class="video-image" [src]=film.urlImagine [alt]="film.titlu + ' imagine'">
+          </a>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <mat-paginator [length]="totalElements"
+                 [pageSize]="5"
+                 [pageSizeOptions]="[5, 10, 25, 100]"
+                 (page)="getPagina()"
+                 showFirstLastButtons
+                 aria-label="selecteaza pagina">
+  </mat-paginator>
+</div>
+
+
+
