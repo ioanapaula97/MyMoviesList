@@ -166,8 +166,8 @@ public class FilmRestController {
     @GetMapping(value = "/model-recomandari-filme")
     public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari () throws OrtException {
         LOG.info("GET filme din Model Machine Learning Recomandari");
+        modelRecomandariService.getRecomandariFilme();
 
-
-        return ResponseEntity.ok().body(modelRecomandariService.getRecomandariFilme(););
+        return ResponseEntity.ok().build();
     }
 }
