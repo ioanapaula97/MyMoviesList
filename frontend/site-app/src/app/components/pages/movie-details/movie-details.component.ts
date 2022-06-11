@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
@@ -17,14 +17,15 @@ export class MovieDetailsComponent implements OnInit {
     {view: 'PLAN TO WATCH', value: 'PLAN_TO_WATCH'},
     {view: 'WATCHING', value: 'WATCHING'}
   ];
-  optiuniNote: number[] = [1,2,3,4,5,6,7,8,9,10];
+  optiuniNote: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   listaFilmeUtilizator: any[];
   coduriFilmeFavorite: string[];
   filmUtilizator: any;
 
   constructor(private filmService: FilmService,
-              private userService: UserService) { }
+              private userService: UserService) {
+  }
 
   ngOnInit(): void {
     this.getFilmeleUtilizatoruluiCurent();
@@ -38,32 +39,32 @@ export class MovieDetailsComponent implements OnInit {
     return Utils.getTooltipButonFavorite(film, this.coduriFilmeFavorite);
   }
 
-  filmulEsteFavorit(film: any){
+  filmulEsteFavorit(film: any) {
     return Utils.filmulEsteFavorit(film.codWikiData, this.coduriFilmeFavorite);
   }
 
-  getFilmeleUtilizatoruluiCurent(){
+  getFilmeleUtilizatoruluiCurent() {
     console.log("GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
-      this.listaFilmeUtilizator = resp ? resp : [] ;
+      this.listaFilmeUtilizator = resp ? resp : [];
       this.coduriFilmeFavorite = this.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
-      this.filmUtilizator = this.listaFilmeUtilizator.filter(f=> f.codWikiData === this.filmSelectat.codWikiData)[0] || {};
+      this.filmUtilizator = this.listaFilmeUtilizator.filter(f => f.codWikiData === this.filmSelectat.codWikiData)[0] || {};
       console.log("filmUtilizator", this.filmUtilizator);
     });
   }
 
-  getCoduriFilmeFavorite(listaFilmeUtilizator: any[]): string[]{
+  getCoduriFilmeFavorite(listaFilmeUtilizator: any[]): string[] {
     let coduriFavorite: string[] = [];
 
-    if(listaFilmeUtilizator && listaFilmeUtilizator.length > 0){
-      coduriFavorite = listaFilmeUtilizator.filter(f=> f.esteFavorit === true).map(f=> f.codWikiData);
+    if (listaFilmeUtilizator && listaFilmeUtilizator.length > 0) {
+      coduriFavorite = listaFilmeUtilizator.filter(f => f.esteFavorit === true).map(f => f.codWikiData);
     }
 
     return coduriFavorite;
   }
 
-  schimbaFavorite(film:any){
-    if(this.filmulEsteFavorit(film)){
+  schimbaFavorite(film: any) {
+    if (this.filmulEsteFavorit(film)) {
       this.filmService.eliminaFilmDeLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     } else {
@@ -73,18 +74,18 @@ export class MovieDetailsComponent implements OnInit {
 
   }
 
-  onStatusChange($event:any){
+  onStatusChange($event: any) {
     console.log("$event", $event);
-    if(this.filmSelectat.statusFilm !== $event.value){
+    if (this.filmSelectat.statusFilm !== $event.value) {
       this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectat.codWikiData, $event.value)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     }
 
   }
 
-  onNotaChange($event:any){
+  onNotaChange($event: any) {
     console.log("$event", $event);
-    if(this.filmSelectat.notaFilm !== $event.value){
+    if (this.filmSelectat.notaFilm !== $event.value) {
       this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectat.codWikiData, $event.value)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     }

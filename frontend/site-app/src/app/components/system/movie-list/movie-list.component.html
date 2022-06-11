@@ -15,7 +15,7 @@
           </mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <a (click)="setFilmSelectat(film)" [routerLink]="'/detalii-film/' + film.codWikiData" class="card-content">
+          <a (click)="setFilmSelectat(film)" [routerLink]="'/movie-details/' + film.codWikiData" class="card-content">
             <mat-card-title>{{film.titlu}}</mat-card-title>
             <mat-card-subtitle>{{film.anAparitie}} ({{film.durata}} minutes)</mat-card-subtitle>
             <mat-card-subtitle>

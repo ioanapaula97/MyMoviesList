@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, NgZone, OnInit} from '@angular/core';
-import {environment} from "../../../../environments/environment";
 import {ActivatedRoute, Router} from "@angular/router";
+import {environment} from "../../../../environments/environment";
 
 // declare var google: any;
 declare var gapi: any;
@@ -10,7 +10,7 @@ declare var gapi: any;
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.less']
 })
-export class LoginComponent implements OnInit, AfterViewInit {
+export class LoginComponent implements OnInit , AfterViewInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -86,3 +86,4 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
 }
+

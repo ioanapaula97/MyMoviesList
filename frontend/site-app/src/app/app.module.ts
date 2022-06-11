@@ -7,8 +7,6 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { UserProfileComponent } from './components/system/user-profile/user-profile.component';
-import { LoginComponent } from './components/system/login/login.component';
 import { GlobalSearchbarComponent } from './components/system/global-searchbar/global-searchbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatSliderModule} from "@angular/material/slider";
@@ -22,8 +20,12 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {HttpClientModule} from "@angular/common/http";
 import { MovieListComponent } from './components/system/movie-list/movie-list.component';
-import { MovieDetailsComponent } from './components/system/movie-details/movie-details.component';
 import { MovieFiltersComponent } from './components/system/movie-filters/movie-filters.component';
+import { FavoriteButtonComponent } from './components/system/favorite-button/favorite-button.component';
+import { SearchComponent } from './components/pages/search/search.component';
+import { UserProfileComponent } from './components/pages/user-profile/user-profile.component';
+import {MovieDetailsComponent} from "./components/pages/movie-details/movie-details.component";
+import {LoginComponent} from "./components/pages/login/login.component";
 
 @NgModule({
   declarations: [
@@ -32,12 +34,14 @@ import { MovieFiltersComponent } from './components/system/movie-filters/movie-f
     HeaderComponent,
     FooterComponent,
     NotFoundComponent,
-    UserProfileComponent,
     LoginComponent,
     GlobalSearchbarComponent,
     MovieListComponent,
     MovieDetailsComponent,
-    MovieFiltersComponent
+    MovieFiltersComponent,
+    FavoriteButtonComponent,
+    SearchComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
