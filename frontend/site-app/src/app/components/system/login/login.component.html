@@ -1,1 +1,17 @@
-<p>login works!</p>
+
+<div class="d-flex justify-content-center">
+  <mat-card class="m-5 col-md-3 text-center">
+    <mat-card-title> Welcome to MyMoviesList!</mat-card-title>
+    <mat-card-subtitle>Please connect with your google account: </mat-card-subtitle>
+    <mat-card-content class="d-flex justify-content-center">
+<!--      <span id="googleLoginButton"></span>-->
+      <div id="googleLoginButton" class="g-signin2" data-onsuccess="onSignIn"></div>
+      <br>
+
+    </mat-card-content>
+    <button mat-raised-button color="primary" (click)="onLogout()">LOGOUT</button>
+    <button mat-raised-button color="primary" (click)="isSignedIn()">is signed in</button>
+  </mat-card>
+
+</div>
+

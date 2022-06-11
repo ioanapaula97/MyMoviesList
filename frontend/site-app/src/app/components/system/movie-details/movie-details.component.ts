@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {FilmService} from "../../../service/film.service";
-import {Utils} from "../../../utils/Utils";
 import {UserService} from "../../../service/user.service";
+import {Utils} from "../../../utils/Utils";
 
 @Component({
-  selector: 'app-video-details',
-  templateUrl: './video-details.component.html',
-  styleUrls: ['./video-details.component.less']
+  selector: 'app-movie-details',
+  templateUrl: './movie-details.component.html',
+  styleUrls: ['./movie-details.component.less']
 })
-export class VideoDetailsComponent implements OnInit {
+export class MovieDetailsComponent implements OnInit {
 
   filmSelectat: any;
   filmStatusEnum: any[] = [
@@ -90,6 +90,5 @@ export class VideoDetailsComponent implements OnInit {
     }
 
   }
-
 
 }

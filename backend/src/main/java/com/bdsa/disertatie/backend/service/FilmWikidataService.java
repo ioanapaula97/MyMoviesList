@@ -153,6 +153,7 @@ public class FilmWikidataService {
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
             "WHERE {\n" +
             "   ?movie wdt:P136 <<<GENURI>>>.\n" +
+            //?movie wdt:P136 wd:Q200092 , wd:Q130232.
             "   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
             "                   ps:P577 ?anAparitie ].\n" +
             "   ?movie wdt:P2047 ?durata.\n" +
@@ -186,12 +187,14 @@ public class FilmWikidataService {
             "    ?movie schema:description ?descriere.   \n" +
             "    ?genre rdfs:label ?genreL. }\n" +
             "  FILTER((?anAparitie >= \"<<<PRIMA_DATA>>>\"^^xsd:dateTime) && (?anAparitie <= \"<<<A_DOUA_DATA>>>\"^^xsd:dateTime))\n" +
+            //FILTER((?anAparitie >= "2017-01-01T00:00:00"^^xsd:dateTime) && (?anAparitie <= "2017-12-31T00:00:00"^^xsd:dateTime))
             "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n";
 
     private final static String QUERY_FILME_DUPA_VARSTA = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
             "WHERE {\n" +
             "   VALUES ?varsta {wd:<<<VARSTA>>>} .  \n" +
+            //VALUES ?varsta {wd:Q18665344} .  # filme PG
             "   ?movie wdt:P1657 ?varsta .  # Restricted MPAA movies\n" +
             "   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
             "                   ps:P577 ?anAparitie ].\n" +
@@ -234,7 +237,8 @@ public class FilmWikidataService {
     private final static String CONDITIE_SORTARE_SCOR_DESC = "ORDER BY desc(?scorReview)\n";
     private final static String CONDITIE_SORTARE_SCOR_ASC = "ORDER BY asc(?scorReview)\n";
     private final static String CONDITIE_SORTARE_DATA_DESC = "";
-    private final static String CONDITIE_SORTARE_BOX_OFFICE_DESC = "";
+    private final static String CONDITIE_SORTARE_DATA_ASC = "";
+
     private final static String LIMITA_FILME =  "LIMIT 20";
 
 

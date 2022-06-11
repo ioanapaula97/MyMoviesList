@@ -7,11 +7,7 @@ import { HomeComponent } from './components/pages/home/home.component';
 import { HeaderComponent } from './components/shared/header/header.component';
 import { FooterComponent } from './components/shared/footer/footer.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { VideoListComponent } from './components/system/video-list/video-list.component';
-import { VideoFiltersComponent } from './components/system/video-filters/video-filters.component';
-import { VideoDetailsComponent } from './components/system/video-details/video-details.component';
 import { UserProfileComponent } from './components/system/user-profile/user-profile.component';
-import { UserVideosComponent } from './components/system/user-videos/user-videos.component';
 import { LoginComponent } from './components/system/login/login.component';
 import { GlobalSearchbarComponent } from './components/system/global-searchbar/global-searchbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,6 +21,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {HttpClientModule} from "@angular/common/http";
+import { MovieListComponent } from './components/system/movie-list/movie-list.component';
+import { MovieDetailsComponent } from './components/system/movie-details/movie-details.component';
+import { MovieFiltersComponent } from './components/system/movie-filters/movie-filters.component';
 
 @NgModule({
   declarations: [
@@ -33,13 +32,12 @@ import {HttpClientModule} from "@angular/common/http";
     HeaderComponent,
     FooterComponent,
     NotFoundComponent,
-    VideoListComponent,
-    VideoFiltersComponent,
-    VideoDetailsComponent,
     UserProfileComponent,
-    UserVideosComponent,
     LoginComponent,
-    GlobalSearchbarComponent
+    GlobalSearchbarComponent,
+    MovieListComponent,
+    MovieDetailsComponent,
+    MovieFiltersComponent
   ],
   imports: [
     BrowserModule,

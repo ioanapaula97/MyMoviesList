@@ -19,6 +19,8 @@ public class FilmWikiData {
     String urlImagine;
     String durata;
     String scorReview;
+    String regizor;
+    List<String> actori;
     List<String> genuri;
 
 }

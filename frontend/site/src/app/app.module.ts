@@ -25,6 +25,9 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {HttpClientModule} from "@angular/common/http";
+import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule} from "angularx-social-login";
+import {AuthGuardService} from "./service/auth-guard.service";
+import { MovieListComponent } from './movie-list/movie-list.component';
 
 @NgModule({
   declarations: [
@@ -39,12 +42,14 @@ import {HttpClientModule} from "@angular/common/http";
     UserProfileComponent,
     UserVideosComponent,
     LoginComponent,
-    GlobalSearchbarComponent
+    GlobalSearchbarComponent,
+    MovieListComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    SocialLoginModule,
     HttpClientModule,
     MatSliderModule,
     MatCardModule,
@@ -56,7 +61,20 @@ import {HttpClientModule} from "@angular/common/http";
     MatSelectModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [{
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: false, //keeps the user signed in
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          // my client id
+          provider: new GoogleLoginProvider('158801350453-35bubmovs32cdmur2sm12cgt83uod3pa.apps.googleusercontent.com', {plugin_name: "tsttsts"})
+        }
+      ]
+    } as SocialAuthServiceConfig,
+  },
+    AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

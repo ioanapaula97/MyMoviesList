@@ -4,9 +4,12 @@ import {HomeComponent} from "./components/pages/home/home.component";
 import {NotFoundComponent} from "./components/pages/not-found/not-found.component";
 import {VideoDetailsComponent} from "./components/system/video-details/video-details.component";
 import {VideoFiltersComponent} from "./components/system/video-filters/video-filters.component";
+import {LoginComponent} from "./components/system/login/login.component";
+import {AuthGuardService} from "./service/auth-guard.service";
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  {path: 'login', component: LoginComponent},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
   { path: 'detalii-film/:id', component: VideoDetailsComponent },
   { path: 'search', component: VideoFiltersComponent },
   { path: '', redirectTo: '/home', pathMatch: 'full'},

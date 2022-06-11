@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TipSortareEnum} from "../../../model/TipSortareEnum";
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 
 @Component({
-  selector: 'app-video-filters',
-  templateUrl: './video-filters.component.html',
-  styleUrls: ['./video-filters.component.less']
+  selector: 'app-movie-filters',
+  templateUrl: './movie-filters.component.html',
+  styleUrls: ['./movie-filters.component.less']
 })
-export class VideoFiltersComponent implements OnInit {
+export class MovieFiltersComponent implements OnInit {
 
   listaFilmeWikiData: any[];
 
@@ -38,49 +38,48 @@ export class VideoFiltersComponent implements OnInit {
 
 
   genSelectat = [];
-  anSelectat:any;
-  sortareSelectata:any;
+  anSelectat: any;
+  sortareSelectata: any;
 
   constructor(private filmService: FilmService,
-              private userService: UserService) { }
+              private userService: UserService) {
+  }
 
   ngOnInit(): void {
     this.filmService.getFilmeDupaTopScor().subscribe((resp) => {
-      this.listaFilmeWikiData = resp ? resp : [] ;
+      this.listaFilmeWikiData = resp ? resp : [];
     });
   }
 
-  selectGen(){
+  selectGen() {
     this.anSelectat = null;
     // this.sortareSelectata = null;
   }
 
-  selectAn(){
+  selectAn() {
     this.genSelectat = [];
     // this.sortareSelectata = null;
   }
 
-  getData(){
-    if(this.anSelectat === null && this.genSelectat) {
+  getData() {
+    if (this.anSelectat === null && this.genSelectat) {
       this.filmService.getFilmeDupaGenuri(this.genSelectat, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
-        .subscribe( res => {
+        .subscribe(res => {
           this.listaFilmeWikiData = res || [];
           console.log("GET DATA dupa genuri, genuri =", this.genSelectat, ", res=", res);
-          this.getPagina()
+          // this.getPagina()/
         });
 
     }
 
-    if(this.genSelectat === null && this.anSelectatOptions) {
+    if (this.genSelectat === null && this.anSelectatOptions) {
       this.filmService.getFilmeDupaAnAparitie(this.anSelectat, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
-        .subscribe( res => {
+        .subscribe(res => {
           this.listaFilmeWikiData = res || [];
           console.log("GET DATA dupa an, an=", this.anSelectat, ", res=", res);
-          this.getPagina()
+          // this.getPagina()
         });
 
     }
   }
-
-
 }

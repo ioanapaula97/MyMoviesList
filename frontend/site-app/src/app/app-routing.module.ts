@@ -2,14 +2,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import {HomeComponent} from "./components/pages/home/home.component";
 import {NotFoundComponent} from "./components/pages/not-found/not-found.component";
-import {VideoDetailsComponent} from "./components/system/video-details/video-details.component";
-import {VideoFiltersComponent} from "./components/system/video-filters/video-filters.component";
+import {LoginComponent} from "./components/system/login/login.component";
+import {AuthGuardService} from "./service/auth-guard.service";
+import {MovieDetailsComponent} from "./components/system/movie-details/movie-details.component";
+import {MovieFiltersComponent} from "./components/system/movie-filters/movie-filters.component";
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
-  { path: 'detalii-film/:id', component: VideoDetailsComponent },
-  { path: 'search', component: VideoFiltersComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: 'login', component: LoginComponent},
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuardService] },
+  { path: 'detalii-film/:codWikiData', component: MovieDetailsComponent, canActivate: [AuthGuardService] },
+  { path: 'search', component: MovieFiltersComponent, canActivate: [AuthGuardService] },
+  { path: '', redirectTo: '/login', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ]; // sets up routes constant where you define your routes
 

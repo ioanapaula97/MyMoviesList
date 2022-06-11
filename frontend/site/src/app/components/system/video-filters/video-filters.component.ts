@@ -82,5 +82,8 @@ export class VideoFiltersComponent implements OnInit {
     }
   }
 
+  getPagina(){
+
+  }
 
 }
