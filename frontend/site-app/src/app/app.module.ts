@@ -26,6 +26,9 @@ import { SearchComponent } from './components/pages/search/search.component';
 import { UserProfileComponent } from './components/pages/user-profile/user-profile.component';
 import {MovieDetailsComponent} from "./components/pages/movie-details/movie-details.component";
 import {LoginComponent} from "./components/pages/login/login.component";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatInputModule} from "@angular/material/input";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import {LoginComponent} from "./components/pages/login/login.component";
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    FormsModule,
     MatSliderModule,
     MatCardModule,
     MatChipsModule,
@@ -56,7 +60,9 @@ import {LoginComponent} from "./components/pages/login/login.component";
     MatPaginatorModule,
     MatFormFieldModule,
     MatSelectModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
