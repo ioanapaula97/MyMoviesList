@@ -11,6 +11,8 @@ import {Utils} from "../../../utils/Utils";
 })
 export class MovieListComponent implements OnInit {
 
+  @Input() pageSize: number | undefined;
+  @Input() colMd: string | undefined;
   @Input() listaFilmeWikiData: any[];
   listaFilmeUtilizator: any[];
   coduriFilmeFavorite: string[];
@@ -25,12 +27,14 @@ export class MovieListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(!this.colMd) this.colMd = 'col-md-2';
     this.getFilmeleUtilizatoruluiCurent();
     this.paginator.initialized.subscribe(() => this.getPagina());
   }
 
   getPagina() {
     console.log('GET page ', this.paginator.pageSize, this.paginator.pageIndex);
+    console.log("GET page lista=", this.listaFilmeWikiData);
     let startIndex = this.paginator.pageIndex * this.paginator.pageSize;
     let endIndex = startIndex + this.paginator.pageSize;
     this.paginaFilme = this.listaFilmeWikiData.slice(startIndex, endIndex);

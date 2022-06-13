@@ -1,7 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {TipSortareEnum} from "../../../model/TipSortareEnum";
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
+import {MovieListComponent} from "../movie-list/movie-list.component";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-movie-filters',
@@ -10,19 +12,28 @@ import {UserService} from "../../../service/user.service";
 })
 export class MovieFiltersComponent implements OnInit {
 
+  @ViewChild('listaRezultat') listaRezultatComp:MovieListComponent;
+
   listaFilmeWikiData: any[];
 
   genuriFilmOptions: any[] = [
-    {view: "", value: null},
     {view: "Drama", value: "Q130232"},
-    {view: "Science Fiction", value: "Q24925"},
+    {view: "Science Fiction", value: "Q471839"},
     {view: "Romance", value: "Q1054574"},
     {view: "Action", value: "Q188473"},
     {view: "Historical", value: "Q17013749"},
+    {view: "Horror", value: "Q200092"},
+    {view: "Thriller", value: "Q2484376"},
+    {view: "Based on a novel", value: "Q52207399"},
+    {view: "Documentary", value: "Q93204"},
+    {view: "Comedy", value: "Q157443"},
+    {view: "Based on literature", value: "Q52162262"},
+    {view: "Black comedy", value: "Q5778924"},
+    {view: "Adventure", value: "Q319221"},
+    {view: "Fantasy", value: "Q157394"}
   ]
 
   anSelectatOptions: any[] = [
-    {view: "", value: null},
     {view: "2022", value: 2022},
     {view: "2021", value: 2021},
     {view: "2020", value: 2020},
@@ -31,55 +42,93 @@ export class MovieFiltersComponent implements OnInit {
   ]
 
   sortareOptions: any[] = [
-    {view: "", value: null},
     {view: "Score ascending", value: TipSortareEnum.SCOR_ASC},
     {view: "Score descending", value: TipSortareEnum.SCOR_DESC}
   ]
 
 
-  genSelectat = [];
+  genuriSelectate: string[] = [];
   anSelectat: any;
   sortareSelectata: any;
 
+  currentUrl: string | undefined;
+
   constructor(private filmService: FilmService,
-              private userService: UserService) {
+              private userService: UserService,
+              private router: Router,
+              private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit(): void {
-    this.filmService.getFilmeDupaTopScor().subscribe((resp) => {
-      this.listaFilmeWikiData = resp ? resp : [];
+    console.log("router=", this.router);
+    console.log("activatedRoute=", this.activatedRoute);
+    this.genuriFilmOptions = this.genuriFilmOptions.sort((a,b) => a.view.localeCompare(b.view));
+    this.currentUrl = this.router.url;
+
+    this.activatedRoute.queryParams.subscribe( params => {
+      console.log("params= ", params);
+      this.genuriSelectate = (params['GENRES'] || '').split(',');
+      this.anSelectat = Number.parseInt((params['YEAR'] || ''));
+
+      console.log("genuriSelectate= ", this.genuriSelectate);
+      console.log("anSelectat= ", this.anSelectat);
+      this.getData();
     });
+
   }
 
   selectGen() {
-    this.anSelectat = null;
+    // this.anSelectat = null;
     // this.sortareSelectata = null;
   }
 
   selectAn() {
-    this.genSelectat = [];
+    // this.genuriSelectate = [];
     // this.sortareSelectata = null;
   }
 
   getData() {
-    if (this.anSelectat === null && this.genSelectat) {
-      this.filmService.getFilmeDupaGenuri(this.genSelectat, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
-        .subscribe(res => {
-          this.listaFilmeWikiData = res || [];
-          console.log("GET DATA dupa genuri, genuri =", this.genSelectat, ", res=", res);
-          // this.getPagina()/
-        });
+   if( this.genuriSelectate) {
+       this.filmService.getFilmeDupaGenuri(this.genuriSelectate, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
+         .subscribe(res => {
+           this.listaFilmeWikiData = res || [];
+           console.log("GET DATA dupa genuri, genuri =", this.genuriSelectate, ", res=", res);
+           this.listaRezultatComp.listaFilmeWikiData = this.listaFilmeWikiData;
+           this.listaRezultatComp.getPagina();
+         });
 
+   }
+    // if (this.anSelectat === null && this.genuriSelectate) {
+    //   this.filmService.getFilmeDupaGenuri(this.genuriSelectate, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
+    //     .subscribe(res => {
+    //       this.listaFilmeWikiData = res || [];
+    //       console.log("GET DATA dupa genuri, genuri =", this.genuriSelectate, ", res=", res);
+    //       this.listaRezultatComp.getPagina();
+    //       // this.getPagina()/
+    //     });
+    //
+    // }
+    //
+    // if (this.genuriSelectate === null && this.anSelectatOptions) {
+    //   this.filmService.getFilmeDupaAnAparitie(this.anSelectat, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
+    //     .subscribe(res => {
+    //       this.listaFilmeWikiData = res || [];
+    //       console.log("GET DATA dupa an, an=", this.anSelectat, ", res=", res);
+    //       this.listaRezultatComp.getPagina();
+    //       // this.getPagina()
+    //     });
+    //
+    // }
+  }
+
+  adaugaFiltreInUrlSiSchimbaRuta(){
+    let urlCuFiltreActive = 'search';
+    if (this.genuriSelectate && this.genuriSelectate.length > 0 ) urlCuFiltreActive += ('?GENRES=' + this.genuriSelectate);
+    if (this.anSelectat) {
+      urlCuFiltreActive.includes('?') ? urlCuFiltreActive += '&' : '?';
+      urlCuFiltreActive += ('YEAR=' + this.anSelectat);
     }
 
-    if (this.genSelectat === null && this.anSelectatOptions) {
-      this.filmService.getFilmeDupaAnAparitie(this.anSelectat, this.sortareSelectata || TipSortareEnum.SCOR_DESC)
-        .subscribe(res => {
-          this.listaFilmeWikiData = res || [];
-          console.log("GET DATA dupa an, an=", this.anSelectat, ", res=", res);
-          // this.getPagina()
-        });
-
-    }
+    this.router.navigateByUrl(urlCuFiltreActive);
   }
 }

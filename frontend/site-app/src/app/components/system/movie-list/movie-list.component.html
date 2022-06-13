@@ -1,5 +1,6 @@
 <div *ngIf="paginaFilme && listaFilmeUtilizator && coduriFilmeFavorite" class="row">
-  <div *ngFor="let film of paginaFilme" class="col-md-2 mb-3 card-container">
+  <div *ngFor="let film of paginaFilme" class="mb-3 card-container"
+        [ngClass]="[colMd]">
     <mat-card class="h-100 d-flex flex-column">
       <mat-card-header class="w-100 mb-2">
         <mat-card-title>
@@ -28,7 +29,7 @@
   </div>
 </div>
 <mat-paginator [length]="totalElements"
-               [pageSize]="6"
+               [pageSize]="pageSize || 6"
                [pageSizeOptions]="[6, 12, 24, 100]"
                (page)="getPagina()"
                showFirstLastButtons
