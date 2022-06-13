@@ -38,46 +38,17 @@ export class MovieListComponent implements OnInit {
   }
 
   setFilmSelectat(film: any) {
-    localStorage.setItem('filmSelectat', JSON.stringify(film));
-  }
-
-  getTooltip(film: any): string {
-    return Utils.getTooltipButonFavorite(film.codWikiData, this.coduriFilmeFavorite);
-  }
-
-  schimbaFavorite(film: any) {
-    if (this.filmulEsteFavorit(film)) {
-      this.filmService.eliminaFilmDeLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    } else {
-      this.filmService.adaugaFilmLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    }
-
-  }
-
-  filmulEsteFavorit(film: any) {
-    return Utils.filmulEsteFavorit(film.codWikiData, this.coduriFilmeFavorite);
+    Utils.setFilmWikiDataSelectatInLocalStorage(film);
   }
 
   getFilmeleUtilizatoruluiCurent() {
     console.log("GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
       this.listaFilmeUtilizator = resp ? resp : [];
-      this.coduriFilmeFavorite = this.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
+      this.coduriFilmeFavorite = Utils.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
       console.log("listaFilmeUtilizator=", this.listaFilmeUtilizator);
       console.log("coduriFilmeFavorite=", this.coduriFilmeFavorite);
     });
-  }
-
-  getCoduriFilmeFavorite(listaFilmeUtilizator: any[]): string[] {
-    let coduriFavorite: string[] = [];
-
-    if (listaFilmeUtilizator && listaFilmeUtilizator.length > 0) {
-      coduriFavorite = listaFilmeUtilizator.filter(f => f.esteFavorit === true).map(f => f.codWikiData) || [];
-    }
-
-    return coduriFavorite;
   }
 
 }

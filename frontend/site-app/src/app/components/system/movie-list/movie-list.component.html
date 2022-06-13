@@ -6,11 +6,10 @@
           <mat-card-title>
             <mat-chip color="accent" selected>{{film.scorReview}}</mat-chip>
             <div class="float-end">
-              <button mat-mini-fab [matTooltip]="getTooltip(film)" [matTooltipPosition]="'left'"
-                      [ngClass]="filmulEsteFavorit(film) ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite"
-                      (click)="schimbaFavorite(film)">
-                <mat-icon>star</mat-icon>
-              </button>
+              <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent()"
+                                   [filmCurent]="film"
+                                   [coduriFilmeFavorite]="coduriFilmeFavorite">
+              </app-favorite-button>
             </div>
           </mat-card-title>
         </mat-card-header>

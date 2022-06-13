@@ -10,7 +10,7 @@ import {Utils} from "../../../utils/Utils";
 })
 export class MovieDetailsComponent implements OnInit {
 
-  filmSelectat: any;
+  filmSelectatWikiData: any;
   filmStatusEnum: any[] = [
     {view: '', value: null},
     {view: 'COMPLETED', value: 'COMPLETED'},
@@ -28,56 +28,27 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.filmSelectatWikiData = Utils.getFilmWikiDataSelectatDinLocalStorage();
     this.getFilmeleUtilizatoruluiCurent();
-    let filmStr: string = localStorage.getItem('filmSelectat') || '';
-    this.filmSelectat = JSON.parse(filmStr) as Object;
 
-    console.log('film selectat', this.filmSelectat);
-  }
 
-  getTooltip(film: any): string {
-    return Utils.getTooltipButonFavorite(film, this.coduriFilmeFavorite);
-  }
-
-  filmulEsteFavorit(film: any) {
-    return Utils.filmulEsteFavorit(film.codWikiData, this.coduriFilmeFavorite);
+    console.log('film selectat wiki data=', this.filmSelectatWikiData);
   }
 
   getFilmeleUtilizatoruluiCurent() {
     console.log("GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
       this.listaFilmeUtilizator = resp ? resp : [];
-      this.coduriFilmeFavorite = this.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
-      this.filmUtilizator = this.listaFilmeUtilizator.filter(f => f.codWikiData === this.filmSelectat.codWikiData)[0] || {};
+      this.coduriFilmeFavorite = Utils.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
+      this.filmUtilizator = this.listaFilmeUtilizator.filter(f => f.codWikiData === this.filmSelectatWikiData.codWikiData)[0] || {};
       console.log("filmUtilizator", this.filmUtilizator);
     });
   }
 
-  getCoduriFilmeFavorite(listaFilmeUtilizator: any[]): string[] {
-    let coduriFavorite: string[] = [];
-
-    if (listaFilmeUtilizator && listaFilmeUtilizator.length > 0) {
-      coduriFavorite = listaFilmeUtilizator.filter(f => f.esteFavorit === true).map(f => f.codWikiData);
-    }
-
-    return coduriFavorite;
-  }
-
-  schimbaFavorite(film: any) {
-    if (this.filmulEsteFavorit(film)) {
-      this.filmService.eliminaFilmDeLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    } else {
-      this.filmService.adaugaFilmLaFavorite(this.userService.getIdUtilizatorCurent(), film.codWikiData)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    }
-
-  }
-
   onStatusChange($event: any) {
     console.log("$event", $event);
-    if (this.filmSelectat.statusFilm !== $event.value) {
-      this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectat.codWikiData, $event.value)
+    if (this.filmUtilizator.statusFilm !== $event.value) {
+      this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmUtilizator.codWikiData, $event.value)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     }
 
@@ -85,8 +56,8 @@ export class MovieDetailsComponent implements OnInit {
 
   onNotaChange($event: any) {
     console.log("$event", $event);
-    if (this.filmSelectat.notaFilm !== $event.value) {
-      this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectat.codWikiData, $event.value)
+    if (this.filmUtilizator.notaFilm !== $event.value) {
+      this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmUtilizator.codWikiData, $event.value)
         .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
     }
 

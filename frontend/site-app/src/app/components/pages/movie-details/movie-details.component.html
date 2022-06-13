@@ -1,31 +1,32 @@
 <div *ngIf="listaFilmeUtilizator && coduriFilmeFavorite" class="row m-3">
   <div class="col-md-3">
-    <img mat-card-image class="w-100" [src]=filmSelectat.urlImagine [alt]="filmSelectat.titlu + ' imagine'">
+    <img mat-card-image class="w-100" [src]=filmSelectatWikiData.urlImagine [alt]="filmSelectatWikiData.titlu + ' imagine'">
   </div>
 
   <div class="col-md-9">
     <h1>
-      <span class="fw-bold">{{filmSelectat.titlu}}</span>
-      <span> ({{filmSelectat.anAparitie}})</span>
+      <span class="fw-bold">{{filmSelectatWikiData.titlu}}</span>
+      <span> ({{filmSelectatWikiData.anAparitie}})</span>
     </h1>
     <div class="mb-2">
       <mat-chip-list aria-label="Genuri film">
-        <mat-chip *ngFor="let gen of filmSelectat.genuri">{{gen}}</mat-chip>
+        <mat-chip *ngFor="let gen of filmSelectatWikiData.genuri">{{gen}}</mat-chip>
       </mat-chip-list>
     </div>
     <div class="mb-2">
-      <mat-chip color="accent" selected>{{filmSelectat.scorReview}}</mat-chip>
+      <mat-chip color="accent" selected>{{filmSelectatWikiData.scorReview}}</mat-chip>
     </div>
     <div>
-      {{filmSelectat.descriere}}
+      {{filmSelectatWikiData.descriere}}
     </div>
 
     <div class="mt-5">
-      <button mat-mini-fab [matTooltip]="getTooltip(filmSelectat)" [matTooltipPosition]="'right'"
-              [ngClass]="filmulEsteFavorit(filmSelectat) ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite"
-              (click)="schimbaFavorite(filmSelectat)">
-        <mat-icon>star</mat-icon>
-      </button>
+
+      <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent()"
+                           [filmCurent]="filmSelectatWikiData"
+                           [coduriFilmeFavorite]="coduriFilmeFavorite">
+      </app-favorite-button>
+
       <br>
       <mat-form-field appearance="fill" class="mt-3">
         <mat-label>Movie status: </mat-label>

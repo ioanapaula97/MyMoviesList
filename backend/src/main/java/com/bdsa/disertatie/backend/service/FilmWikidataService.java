@@ -189,6 +189,63 @@ public class FilmWikidataService {
             "  FILTER((?anAparitie >= \"<<<PRIMA_DATA>>>\"^^xsd:dateTime) && (?anAparitie <= \"<<<A_DOUA_DATA>>>\"^^xsd:dateTime))\n" +
             //FILTER((?anAparitie >= "2017-01-01T00:00:00"^^xsd:dateTime) && (?anAparitie <= "2017-12-31T00:00:00"^^xsd:dateTime))
             "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n";
+    /*
+    # query cu data refacut cu noile informatii pentru filme
+SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director
+(group_concat(distinct ?genreL;separator="; ") as ?genuri)
+(group_concat(distinct ?castMember;separator="; ") as ?actori)
+(group_concat(distinct ?castId;separator="; ") as ?Idactori)
+WHERE {
+   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie
+                   ps:P577 ?anAparitie ].
+   ?movie wdt:P2047 ?durata.
+   ?movie wdt:P136 ?genre.
+   ?movie wdt:P57 ?directorId.
+   ?movie p:P444 [ pq:P459 wd:Q108403393;
+                   ps:P444 ?scorReview] .
+   ?movie wdt:P18 ?urlImagine.
+   ?movie wdt:P161 ?castId.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+    ?movie rdfs:label ?titlu.
+    ?movie schema:description ?descriere.
+    ?genre rdfs:label ?genreL.
+    ?castId rdfs:label ?castMember.
+    ?directorId rdfs:label ?director.}
+  FILTER((?anAparitie >= "2017-01-01T00:00:00Z"^^xsd:dateTime) && (?anAparitie <= "2017-12-31T00:00:00Z"^^xsd:dateTime))
+} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director
+LIMIT 20
+    * */
+
+
+    /*
+    # query cu data refacut cu noile informatii pentru filme, in care a jucat un anumit actor
+SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director
+(group_concat(distinct ?genreL;separator="; ") as ?genuri)
+(group_concat(distinct ?castMember;separator="; ") as ?actori)
+(group_concat(distinct ?otherCastId;separator="; ") as ?IdActori)
+WHERE {
+   VALUES ?castId {wd:Q45772} .  # id actori
+   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie
+                   ps:P577 ?anAparitie ].
+   ?movie wdt:P2047 ?durata.
+   ?movie wdt:P136 ?genre.
+   ?movie wdt:P57 ?directorId.
+   ?movie p:P444 [ pq:P459 wd:Q108403393;
+                   ps:P444 ?scorReview] .
+   ?movie wdt:P18 ?urlImagine.
+   ?movie wdt:P161 ?castId.
+   ?movie wdt:P161 ?otherCastId.
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+    ?movie rdfs:label ?titlu.
+    ?movie schema:description ?descriere.
+    ?genre rdfs:label ?genreL.
+    ?otherCastId rdfs:label ?castMember.
+    ?directorId rdfs:label ?director.}
+} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director
+LIMIT 20
+    * */
 
     private final static String QUERY_FILME_DUPA_VARSTA = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
