@@ -1,9 +1,8 @@
-<h1>Welcome HOME</h1>
+<div class="m-3">
+  <h1>Welcome HOME</h1>
+  <app-movie-list *ngIf="listaFilmeWikiData" [listaFilmeWikiData]="listaFilmeWikiData"></app-movie-list>
+</div>
 
-
-<app-movie-list *ngIf="listaFilmeWikiData"
-                [listaFilmeWikiData]="listaFilmeWikiData"
-></app-movie-list>
 
 
 
