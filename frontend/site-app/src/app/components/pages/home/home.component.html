@@ -1,6 +1,21 @@
 <div class="m-3">
-  <h1>Welcome HOME</h1>
-  <app-movie-list *ngIf="listaFilmeWikiData" [listaFilmeWikiData]="listaFilmeWikiData"></app-movie-list>
+  <h1>Welcome HOME! Here is our selection for you:</h1>
+
+  <div class="card border-2 p-2 mb-4">
+    <h2>Recommended for you:</h2>
+    <app-movie-list *ngIf="listaFilmeWikiData" [listaFilmeWikiData]="listaFilmeWikiData"></app-movie-list>
+  </div>
+
+  <div class="card border-2 p-2 mb-4">
+    <h2>Top movies by score:</h2>
+    <app-movie-list *ngIf="listaFilmeWikiData" [listaFilmeWikiData]="listaFilmeWikiData"></app-movie-list>
+  </div>
+
+  <div class="card border-2 p-2">
+    <h2>Newest movies:</h2>
+    <app-movie-list *ngIf="listaFilmeWikiData" [listaFilmeWikiData]="listaFilmeWikiData"></app-movie-list>
+  </div>
+
 </div>
 
 
