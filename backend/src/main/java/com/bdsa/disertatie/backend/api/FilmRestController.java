@@ -106,7 +106,7 @@ public class FilmRestController {
 
 
     @GetMapping(value = "/toate-ale-utilizatorului/{userId}")
-    public ResponseEntity<List<FilmDto>> toateFilmeleUtilizatorului(@PathVariable Long userId) throws JsonProcessingException {
+    public ResponseEntity<List<FilmDto>> toateFilmeleUtilizatorului(@PathVariable Long userId) {
         LOG.info("GET Toate filmele pentru  cu id-ul {}", userId);
         List<FilmDto> filmeleUtilizatorului;
 
@@ -116,41 +116,41 @@ public class FilmRestController {
     }
 
     @PostMapping(value = "/adauga-favorit/{userId}/{codFilmWikiData}")
-    public ResponseEntity<String> adaugaFilmLaFavorite(@PathVariable Long userId, @PathVariable String codFilmWikiData) throws JsonProcessingException {
+    public ResponseEntity<String> adaugaFilmLaFavorite(@PathVariable Long userId, @PathVariable String codFilmWikiData) {
         LOG.info("POST Adauga film la favorite userId= {}, codFilmWikiData= {}", userId, codFilmWikiData);
 
-        filmService.modificaDetaliiFilm(userId, codFilmWikiData, true, null, null);
+        filmService.modificaFilmFavorit(userId, codFilmWikiData, true);
 
         return ResponseEntity.ok().build();
     }
 
     @PostMapping(value = "/elimina-favorit/{userId}/{codFilmWikiData}")
-    public ResponseEntity<String> eliminaFilmDeLaFavorite(@PathVariable Long userId, @PathVariable String codFilmWikiData) throws JsonProcessingException {
+    public ResponseEntity<String> eliminaFilmDeLaFavorite(@PathVariable Long userId, @PathVariable String codFilmWikiData) {
         LOG.info("POST Elimina film de la favorite userId= {}, codFilmWikiData= {}", userId, codFilmWikiData);
 
-        filmService.modificaDetaliiFilm(userId, codFilmWikiData, false, null, null);
+        filmService.modificaFilmFavorit(userId, codFilmWikiData, false);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/acorda-nota/{userId}/{codFilmWikiData}/{nota}")
-    public ResponseEntity<String> acordaNotaFilm(@PathVariable Long userId,
-                                                 @PathVariable String codFilmWikiData,
-                                                 @PathVariable Integer nota) throws JsonProcessingException {
+    @PostMapping(value = "/acorda-nota")
+    public ResponseEntity<String> acordaNotaFilm(@RequestParam Long userId,
+                                                 @RequestParam String codFilmWikiData,
+                                                 @RequestParam(required = false) Integer nota) {
         LOG.info("POST Acorda nota film userId= {}, codFilmWikiData= {}, nota={}", userId, codFilmWikiData, nota);
 
-        filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, nota, null);
+        filmService.acordaNotaFilm(userId, codFilmWikiData, nota);
 
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "/schimba-status/{userId}/{codFilmWikiData}/{statusFilm}")
-    public ResponseEntity<String> schimbaStatusFilm(@PathVariable Long userId,
-                                                    @PathVariable String codFilmWikiData,
-                                                    @PathVariable StatusFilmEnum statusFilm) throws JsonProcessingException {
+    @PostMapping(value = "/schimba-status")
+    public ResponseEntity<String> schimbaStatusFilm(@RequestParam Long userId,
+                                                    @RequestParam String codFilmWikiData,
+                                                    @RequestParam(required = false) StatusFilmEnum statusFilm) {
         LOG.info("POST Schimba status film userId= {}, codFilmWikiData= {}, status= {}", userId, codFilmWikiData, statusFilm);
 
-        filmService.modificaDetaliiFilm(userId, codFilmWikiData, null, null, statusFilm);
+        filmService.modificaStatusFilm(userId, codFilmWikiData, statusFilm);
 
         return ResponseEntity.ok().build();
     }

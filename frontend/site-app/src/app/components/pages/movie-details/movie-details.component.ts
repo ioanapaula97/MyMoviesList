@@ -46,21 +46,16 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   onStatusChange($event: any) {
-    console.log("$event", $event);
-    if (this.filmUtilizator.statusFilm !== $event.value) {
-      this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmUtilizator.codWikiData, $event.value)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    }
-
+    console.log("onStatusChange $event=", $event);
+    console.log("onStatusChange this.filmUtilizator=", this.filmUtilizator);
+    this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectatWikiData.codWikiData, $event.value)
+      .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
   }
 
   onNotaChange($event: any) {
-    console.log("$event", $event);
-    if (this.filmUtilizator.notaFilm !== $event.value) {
-      this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmUtilizator.codWikiData, $event.value)
-        .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
-    }
-
+    console.log("onNotaChange $event=", $event);
+    this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectatWikiData.codWikiData, $event.value)
+      .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
   }
 
 }

@@ -14,7 +14,9 @@ public class Film extends BaseEntity{
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+    @Column(nullable = false)
     private String codWikiData;
+    @Column(columnDefinition="BOOLEAN DEFAULT false", nullable = false)
     private Boolean esteFavorit;
     @Enumerated(EnumType.STRING) //pentru a salva valoarea textuala din enum (nu codul)
     private StatusFilmEnum statusFilm;

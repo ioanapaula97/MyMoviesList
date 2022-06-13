@@ -43,7 +43,7 @@ public class FilmService {
     }
 
     @Transactional
-    public void modificaDetaliiFilm(Long userId, String codFilmWikiData, Boolean esteFavorit, Integer notaFilm, StatusFilmEnum statusFilm){
+    public Film getFilmDupaUserIdSiCodWikiData(Long userId, String codFilmWikiData){
         User user = userRepository.getById(userId);
         Film film = null;
 
@@ -52,13 +52,37 @@ public class FilmService {
             film = new Film();
             film.setUser(user);
             film.setCodWikiData(codFilmWikiData);
+            film.setEsteFavorit(false);
         }
 
-        if(esteFavorit != null) film.setEsteFavorit(esteFavorit);
-        if(notaFilm != null) film.setNotaFilm(notaFilm);
-        if(statusFilm != null) film.setStatusFilm(statusFilm);
-        filmRepository.save(film);
+        return film;
 
+//        if(esteFavorit != null) film.setEsteFavorit(esteFavorit);
+//        if(notaFilm != null) film.setNotaFilm(notaFilm);
+//        if(statusFilm != null) film.setStatusFilm(statusFilm);
+//        filmRepository.save(film);
+
+    }
+
+    @Transactional
+    public void modificaStatusFilm (Long userId, String codFilmWikiData, StatusFilmEnum statusFilm){
+        Film film = getFilmDupaUserIdSiCodWikiData(userId, codFilmWikiData);
+        film.setStatusFilm(statusFilm);
+        filmRepository.save(film);
+    }
+
+    @Transactional
+    public void acordaNotaFilm (Long userId, String codFilmWikiData, Integer nota){
+        Film film = getFilmDupaUserIdSiCodWikiData(userId, codFilmWikiData);
+        film.setNotaFilm(nota);
+        filmRepository.save(film);
+    }
+
+    @Transactional
+    public void modificaFilmFavorit (Long userId, String codFilmWikiData, Boolean esteFavorit){
+        Film film = getFilmDupaUserIdSiCodWikiData(userId, codFilmWikiData);
+        film.setEsteFavorit(esteFavorit);
+        filmRepository.save(film);
     }
 
 
