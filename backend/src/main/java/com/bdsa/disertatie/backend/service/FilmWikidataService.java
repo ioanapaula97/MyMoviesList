@@ -1,6 +1,8 @@
 package com.bdsa.disertatie.backend.service;
 
+import com.bdsa.disertatie.backend.dto.Actor;
 import com.bdsa.disertatie.backend.dto.FilmWikiData;
+import com.bdsa.disertatie.backend.dto.GenFilm;
 import com.bdsa.disertatie.backend.enums.TipSortareEnum;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -140,8 +142,8 @@ public class FilmWikidataService {
             filmWikiData.setTitlu(film.at("/titlu/value").asText());
             filmWikiData.setDescriere(film.at("/descriere/value").asText());
             filmWikiData.setUrlImagine(film.at("/urlImagine/value").asText());
-            filmWikiData.setGenuri(Arrays.asList(film.at("/genuri/value").asText().split("; "))
-                    .stream().map(this::prelucrareGenFilm).collect(Collectors.toList()));
+            filmWikiData.setGenuri(prelucrareGenuriFilm(film.at("/genuri/value").asText(), film.at("/Idgenuri/value").asText()));
+            filmWikiData.setActori(prelucrareActoriFilm(film.at("/actori/value").asText(),film.at("/Idactori/value").asText()));
             filmWikiData.setDurata(film.at("/durata/value").asText());
             filmWikiData.setScorReview(film.at("/scorReview/value").asText().split("; ")[0]);
             filmWikiData.setAnAparitie(film.at("/anAparitie/value").asText().split("-")[0]);
@@ -151,13 +153,48 @@ public class FilmWikidataService {
         return listaFilme;
     }
 
-    private String prelucrareGenFilm (String genFilm) {
-        if(genFilm != null && genFilm.contains("film")) return genFilm.replace("film", "").strip();
-        return genFilm;
+    private List<GenFilm> prelucrareGenuriFilm (String genuriFilm, String iduriGenuri) {
+        List<String> denumiriGenuri = Arrays.asList(genuriFilm.split("; ")).stream().map(genFilm -> {
+            if(genFilm != null && genFilm.contains("film")) return genFilm.replace("film", "").strip();
+            return genFilm;
+        }).collect(Collectors.toList());
+
+        List<String> coduriGenuri= Arrays.asList(iduriGenuri.split("; ")).stream().map(urlActor -> {
+            String[] urlParts =  urlActor.split("/");
+            return urlParts[urlParts.length-1];
+        }).collect(Collectors.toList());
+
+        List<GenFilm> genuri = new ArrayList<>();
+        for ( int i= 0; i< denumiriGenuri.size(); i++){
+            GenFilm gen = new GenFilm();
+            gen.setDenumireGen(denumiriGenuri.get(i));
+            gen.setCodWikiData(coduriGenuri.get(i));
+            genuri.add(gen);
+        }
+        return genuri;
     }
 
-    private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview  \n" +
+    private List<Actor> prelucrareActoriFilm (String actoriFilm, String iduriActori) {
+        List<String> numeActori = Arrays.asList(actoriFilm.split("; "));
+        List<String> coduriActori = Arrays.asList(iduriActori.split("; ")).stream().map(urlActor -> {
+            String[] urlParts =  urlActor.split("/");
+            return urlParts[urlParts.length-1];
+        }).collect(Collectors.toList());
+
+        List<Actor> actori = new ArrayList<>();
+        for ( int i= 0; i< numeActori.size(); i++){
+            Actor actor = new Actor();
+            actor.setNumeActor(numeActori.get(i));
+            actor.setCodWikiData(coduriActori.get(i));
+            actori.add(actor);
+        }
+        return actori;
+    }
+
+    private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
             "WHERE {\n" +
             "   ?movie wdt:P136 <<<GENURI>>>.\n" +
             //?movie wdt:P136 wd:Q200092 , wd:Q130232.
@@ -165,37 +202,44 @@ public class FilmWikidataService {
             "                   ps:P577 ?anAparitie ].\n" +
             "   ?movie wdt:P2047 ?durata.\n" +
             "   ?movie wdt:P136 ?genre. \n" +
+            "   ?movie wdt:P57 ?directorId.\n" +
             "   ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
             "                   ps:P444 ?scorReview] .\n" +
             "   ?movie wdt:P18 ?urlImagine.  \n" +
+            "   ?movie wdt:P161 ?castId.\n" +
             "  SERVICE wikibase:label { \n" +
             "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
             "    ?movie rdfs:label ?titlu.\n" +
             "    ?movie schema:description ?descriere.   \n" +
-            "    ?genre rdfs:label ?genreL. }\n" +
-            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n";
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director\n";
 
-    private final static String QUERY_FILME_DUPA_AN_APARITIE = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview \n" +
+    private final static String QUERY_FILME_DUPA_AN_APARITIE = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
             "WHERE {\n" +
             "   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
             "                   ps:P577 ?anAparitie ].\n" +
             "   ?movie wdt:P2047 ?durata.\n" +
             "   ?movie wdt:P136 ?genre. \n" +
+            "   ?movie wdt:P57 ?directorId.\n" +
             "   ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
             "                   ps:P444 ?scorReview] .\n" +
-            "   ?movie wdt:P18 ?urlImagine.\n" +
-            "#    ?movie p:2142 [].\n" +
-            "#    ?statement pq:3005 wd:Q30. # place of boxoffice is unitated states\n" +
-            "#    ?statement ps:2142 ?boxOffice.\n" +
+            "   ?movie wdt:P18 ?urlImagine.  \n" +
+            "   ?movie wdt:P161 ?castId.\n" +
             "  SERVICE wikibase:label { \n" +
             "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
             "    ?movie rdfs:label ?titlu.\n" +
             "    ?movie schema:description ?descriere.   \n" +
-            "    ?genre rdfs:label ?genreL. }\n" +
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
             "  FILTER((?anAparitie >= \"<<<PRIMA_DATA>>>\"^^xsd:dateTime) && (?anAparitie <= \"<<<A_DOUA_DATA>>>\"^^xsd:dateTime))\n" +
             //FILTER((?anAparitie >= "2017-01-01T00:00:00"^^xsd:dateTime) && (?anAparitie <= "2017-12-31T00:00:00"^^xsd:dateTime))
-            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n";
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director\n";
     /*
     # query cu data refacut cu noile informatii pentru filme
 SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director
@@ -254,8 +298,10 @@ WHERE {
 LIMIT 20
     * */
 
-    private final static String QUERY_FILME_DUPA_VARSTA = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview \n" +
+    private final static String QUERY_FILME_DUPA_VARSTA = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
             "WHERE {\n" +
             "   VALUES ?varsta {wd:<<<VARSTA>>>} .  \n" +
             //VALUES ?varsta {wd:Q18665344} .  # filme PG
@@ -264,36 +310,43 @@ LIMIT 20
             "                   ps:P577 ?anAparitie ].\n" +
             "   ?movie wdt:P2047 ?durata.\n" +
             "   ?movie wdt:P136 ?genre. \n" +
+            "   ?movie wdt:P57 ?directorId.\n" +
             "   ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
             "                   ps:P444 ?scorReview] .\n" +
-            "   ?movie wdt:P18 ?urlImagine.\n" +
-            "#    ?movie p:2142 [].\n" +
-            "#    ?statement pq:3005 wd:Q30. # place of boxoffice is unitated states\n" +
-            "#    ?statement ps:2142 ?boxOffice.\n" +
+            "   ?movie wdt:P18 ?urlImagine.  \n" +
+            "   ?movie wdt:P161 ?castId.\n" +
             "  SERVICE wikibase:label { \n" +
             "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
             "    ?movie rdfs:label ?titlu.\n" +
             "    ?movie schema:description ?descriere.   \n" +
-            "    ?genre rdfs:label ?genreL. }\n" +
-            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n";
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director\n";
 
-    private final static String QUERY_FILME_TOP_SCOR = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview \n" +
+    private final static String QUERY_FILME_TOP_SCOR = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
             "WHERE {\n" +
-            "   ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
-            "                   ps:P577 ?anAparitie ].\n" +
-            "   ?movie wdt:P2047 ?durata.\n" +
-            "   ?movie wdt:P136 ?genre. \n" +
-            "   ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
-            "                   ps:P444 ?scorReview] .\n" +
-            "   ?movie wdt:P18 ?urlImagine.\n" +
-            "\n" +
+            "  ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
+            "                  ps:P577 ?anAparitie ].\n" +
+            "  ?movie wdt:P2047 ?durata.\n" +
+            "  ?movie wdt:P136 ?genre. \n" +
+            "  ?movie wdt:P57 ?directorId.\n" +
+            "  ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
+            "                  ps:P444 ?scorReview] .\n" +
+            "  ?movie wdt:P18 ?urlImagine.  \n" +
+            "  ?movie wdt:P161 ?castId.\n" +
             "  SERVICE wikibase:label { \n" +
             "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
             "    ?movie rdfs:label ?titlu.\n" +
             "    ?movie schema:description ?descriere.   \n" +
-            "    ?genre rdfs:label ?genreL. }\n" +
-            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview\n" +
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director ?Idgenuri\n" +
             "ORDER BY desc(?scorReview)\n" +
             "LIMIT 20";
 

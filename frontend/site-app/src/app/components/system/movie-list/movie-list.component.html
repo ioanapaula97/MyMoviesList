@@ -16,7 +16,7 @@
         <mat-card-subtitle>{{film.anAparitie}} ({{film.durata}} minutes)</mat-card-subtitle>
         <mat-card-subtitle>
           <mat-chip-list aria-label="Genuri film">
-            <mat-chip *ngFor="let gen of film.genuri"><a [routerLink]="'/movie-details/' + film.codWikiData">{{gen}}</a></mat-chip>
+            <mat-chip *ngFor="let gen of film.genuri"><a [routerLink]="'/movie-details/' + film.codWikiData">{{gen.denumireGen}}</a></mat-chip>
           </mat-chip-list>
         </mat-card-subtitle>
       </mat-card-header>

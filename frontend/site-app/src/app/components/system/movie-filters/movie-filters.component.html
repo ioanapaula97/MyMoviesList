@@ -25,7 +25,7 @@
   <button mat-raised-button color="warn" (click)="adaugaFiltreInUrlSiSchimbaRuta()">Search</button>
 
   <h1 class="mt-3">Result: </h1>
-  <app-movie-list #listaRezultat *ngIf="listaFilmeWikiData"
+  <app-movie-list #listaRezultat *ngIf="listaFilmeWikiData && listaFilmeWikiData.length > 0"
                   [listaFilmeWikiData]="listaFilmeWikiData"
                   [pageSize]="12"
                   [colMd]="'col-md-3'"></app-movie-list>
