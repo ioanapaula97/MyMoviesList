@@ -18,7 +18,7 @@ export class MovieListComponent implements OnInit {
   coduriFilmeFavorite: string[];
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  totalElements: number;
+  totalElements: number | undefined;
   paginaFilme: any[];
 
 
@@ -29,6 +29,7 @@ export class MovieListComponent implements OnInit {
   ngOnInit(): void {
     if(!this.colMd) this.colMd = 'col-md-2';
     this.getFilmeleUtilizatoruluiCurent();
+    this.totalElements = this.listaFilmeWikiData.length;
     this.paginator.initialized.subscribe(() => this.getPagina());
   }
 
@@ -38,7 +39,6 @@ export class MovieListComponent implements OnInit {
     let startIndex = this.paginator.pageIndex * this.paginator.pageSize;
     let endIndex = startIndex + this.paginator.pageSize;
     this.paginaFilme = this.listaFilmeWikiData.slice(startIndex, endIndex);
-    this.totalElements = this.listaFilmeWikiData.length;
   }
 
   setFilmSelectat(film: any) {
