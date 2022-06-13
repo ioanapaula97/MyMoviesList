@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FilmWikidataService {
@@ -139,7 +140,8 @@ public class FilmWikidataService {
             filmWikiData.setTitlu(film.at("/titlu/value").asText());
             filmWikiData.setDescriere(film.at("/descriere/value").asText());
             filmWikiData.setUrlImagine(film.at("/urlImagine/value").asText());
-            filmWikiData.setGenuri(Arrays.asList(film.at("/genuri/value").asText().split("; ")));
+            filmWikiData.setGenuri(Arrays.asList(film.at("/genuri/value").asText().split("; "))
+                    .stream().map(this::prelucrareGenFilm).collect(Collectors.toList()));
             filmWikiData.setDurata(film.at("/durata/value").asText());
             filmWikiData.setScorReview(film.at("/scorReview/value").asText().split("; ")[0]);
             filmWikiData.setAnAparitie(film.at("/anAparitie/value").asText().split("-")[0]);
@@ -147,6 +149,11 @@ public class FilmWikidataService {
         }
 
         return listaFilme;
+    }
+
+    private String prelucrareGenFilm (String genFilm) {
+        if(genFilm != null && genFilm.contains("film")) return genFilm.replace("film", "").strip();
+        return genFilm;
     }
 
     private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview  \n" +
