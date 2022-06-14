@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -166,7 +168,9 @@ public class FilmRestController {
     @GetMapping(value = "/model-recomandari-filme")
     public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari () throws OrtException {
         LOG.info("GET filme din Model Machine Learning Recomandari");
-        modelRecomandariService.getRecomandariFilme();
+        List<Integer> idsUseri = new ArrayList<>(Arrays.asList(1,1,1,1,1,1));
+        List<Integer> idsFilme = new ArrayList<>(Arrays.asList(8,143,175,285,203,400));
+        modelRecomandariService.getRecomandariFilme(idsUseri, idsFilme);
 
         return ResponseEntity.ok().build();
     }
