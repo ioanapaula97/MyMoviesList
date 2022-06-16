@@ -13,7 +13,7 @@ public class Film extends BaseEntity{
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    private Utilizator utilizator;
     @Column(nullable = false)
     private String codWikiData;
     @Column(columnDefinition="BOOLEAN DEFAULT false", nullable = false)
@@ -22,12 +22,12 @@ public class Film extends BaseEntity{
     private StatusFilmEnum statusFilm;
     private Integer notaFilm;
 
-    public User getUser() {
-        return user;
+    public Utilizator getUtilizator() {
+        return utilizator;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUtilizator(Utilizator utilizator) {
+        this.utilizator = utilizator;
     }
 
     public String getCodWikiData() {

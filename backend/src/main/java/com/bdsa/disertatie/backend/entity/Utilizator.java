@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "site_user",
        uniqueConstraints = {@UniqueConstraint(name = "unique_username", columnNames = {"username"})})
-public class User extends BaseEntity {
+public class Utilizator extends BaseEntity {
 
     private String username;
 

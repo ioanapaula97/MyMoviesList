@@ -193,6 +193,7 @@ public class FilmWikidataService {
 
     private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
             "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
             "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
             "WHERE {\n" +
@@ -214,7 +215,7 @@ public class FilmWikidataService {
             "    ?genre rdfs:label ?genreL. \n" +
             "    ?castId rdfs:label ?castMember.\n" +
             "    ?directorId rdfs:label ?director.}\n" +
-            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director\n";
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director ?Idgenuri\n";
 
     private final static String QUERY_FILME_DUPA_AN_APARITIE = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +

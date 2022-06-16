@@ -3,6 +3,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-movie-list',
@@ -11,6 +12,7 @@ import {Utils} from "../../../utils/Utils";
 })
 export class MovieListComponent implements OnInit {
 
+  @Input() displayType: string | undefined;
   @Input() pageSize: number | undefined;
   @Input() colMd: string | undefined;
   @Input() listaFilmeWikiData: any[];
@@ -21,6 +23,14 @@ export class MovieListComponent implements OnInit {
   totalElements: number | undefined;
   paginaFilme: any[];
 
+  tableDataSource: any;
+  displayedColumns: string[] = ['favorit', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ];
+  filmStatusEnum: any[] = [
+    {view: '', value: null},
+    {view: 'COMPLETED', value: 'COMPLETED'},
+    {view: 'PLAN TO WATCH', value: 'PLAN_TO_WATCH'},
+    {view: 'WATCHING', value: 'WATCHING'}
+  ];
 
   constructor(private filmService: FilmService,
               private userService: UserService) {
@@ -31,6 +41,9 @@ export class MovieListComponent implements OnInit {
     this.getFilmeleUtilizatoruluiCurent();
     this.totalElements = this.listaFilmeWikiData.length;
     this.paginator.initialized.subscribe(() => this.getPagina());
+
+    this.tableDataSource = new MatTableDataSource<any>(this.listaFilmeWikiData);
+    this.tableDataSource.paginator = this.paginator;
   }
 
   getPagina() {

@@ -2,7 +2,7 @@ package com.bdsa.disertatie.backend.service;
 
 
 import com.bdsa.disertatie.backend.dto.UserDto;
-import com.bdsa.disertatie.backend.entity.User;
+import com.bdsa.disertatie.backend.entity.Utilizator;
 import com.bdsa.disertatie.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class UserService {
         return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    public UserDto mapToDto (User entity){
+    public UserDto mapToDto (Utilizator entity){
         return modelMapper.map(entity, UserDto.class);
     }
 

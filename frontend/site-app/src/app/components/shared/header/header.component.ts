@@ -21,7 +21,7 @@ export class HeaderComponent implements OnInit {
       this.currentUser = user;
       console.log('HEADER currentUser=',this.currentUser);
       this.changeDetectorRef.detectChanges();
-    })
+    });
 
   }
 

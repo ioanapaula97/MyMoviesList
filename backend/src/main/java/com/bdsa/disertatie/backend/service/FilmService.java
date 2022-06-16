@@ -2,7 +2,7 @@ package com.bdsa.disertatie.backend.service;
 
 import com.bdsa.disertatie.backend.dto.FilmDto;
 import com.bdsa.disertatie.backend.entity.Film;
-import com.bdsa.disertatie.backend.entity.User;
+import com.bdsa.disertatie.backend.entity.Utilizator;
 import com.bdsa.disertatie.backend.enums.StatusFilmEnum;
 import com.bdsa.disertatie.backend.repository.FilmRepository;
 import com.bdsa.disertatie.backend.repository.UserRepository;
@@ -33,10 +33,10 @@ public class FilmService {
     }
 
     public List<FilmDto> toateFilmeleUtilizatorului(Long userId) {
-        User user = userRepository.getById(userId);
+        Utilizator utilizator = userRepository.getById(userId);
         List<Film> lista = null;
 
-        if (user != null) lista = filmRepository.findAllByUser(user);
+        if (utilizator != null) lista = filmRepository.findAllByUtilizator(utilizator);
         if (lista != null) return lista.stream().map(this::mapToDto).collect(Collectors.toList());
 
         return new ArrayList<>();
@@ -44,13 +44,13 @@ public class FilmService {
 
     @Transactional
     public Film getFilmDupaUserIdSiCodWikiData(Long userId, String codFilmWikiData){
-        User user = userRepository.getById(userId);
+        Utilizator utilizator = userRepository.getById(userId);
         Film film = null;
 
-        if (user != null) film = filmRepository.findByUserAndCodWikiData(user, codFilmWikiData);
+        if (utilizator != null) film = filmRepository.findByUtilizatorAndCodWikiData(utilizator, codFilmWikiData);
         if(film == null){
             film = new Film();
-            film.setUser(user);
+            film.setUtilizator(utilizator);
             film.setCodWikiData(codFilmWikiData);
             film.setEsteFavorit(false);
         }

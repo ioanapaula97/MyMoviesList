@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Actor {
-    String numeActor;
-    String codWikiData;
+    private String numeActor;
+    private String codWikiData;
+
 }
