@@ -14,7 +14,7 @@ const routes: Routes = [
   { path: 'movie-details/:codWikiData', component: MovieDetailsComponent, canActivate: [AuthGuardService] },
   { path: 'search', component: MovieFiltersComponent, canActivate: [AuthGuardService] },
   { path: 'my-profile', component: UserProfileComponent, canActivate: [AuthGuardService] },
-  { path: '', redirectTo: '/login', pathMatch: 'full'},
+  { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ]; // sets up routes constant where you define your routes
 

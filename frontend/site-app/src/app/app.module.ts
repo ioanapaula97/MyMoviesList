@@ -29,6 +29,7 @@ import {LoginComponent} from "./components/pages/login/login.component";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -62,7 +63,9 @@ import {FormsModule} from "@angular/forms";
     MatSelectModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatInputModule
+    MatInputModule,
+    CommonModule,
+    CommonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
