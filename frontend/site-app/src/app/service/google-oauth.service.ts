@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {environment} from "../../environments/environment";
 import {GoogleUser} from "../model/GoogleUser";
 import {BehaviorSubject} from "rxjs";
@@ -15,7 +15,8 @@ export class GoogleOauthService {
   public currentUserSubject: BehaviorSubject<GoogleUser | undefined> = new BehaviorSubject(this.currentUser);
   private googleAuth: any;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+              private ngZone: NgZone) {}
 
   loadGoogleOauthAPI() {
     gapi.load('auth2', () => {
@@ -30,10 +31,9 @@ export class GoogleOauthService {
 
   listenForUserSignedInStateChanges(){
     this.googleAuth.isSignedIn.listen((isSignedIn:boolean) => {
-      console.log('***** user sign-in state changed, isSignedIn=', isSignedIn);
       if(isSignedIn) { this.updateCurrentUser(); }
       if((this.currentUser !== undefined) && (this.router.url === '/login')) {
-        this.router.navigateByUrl('/');
+        this.ngZone.run(() => this.router.navigateByUrl("/"));
       }});
   }
 
@@ -42,7 +42,6 @@ export class GoogleOauthService {
     if(basicProfile) {this.currentUser = new GoogleUser(basicProfile.getGivenName(), basicProfile.getFamilyName(),
       basicProfile.getEmail(), basicProfile.getImageUrl());}
     else{ this.currentUser = undefined;}
-    console.log('***** updateCurrentUser, currentUser', this.currentUser);
     this.currentUserSubject.next(this.currentUser);
   }
 
@@ -52,49 +51,45 @@ export class GoogleOauthService {
   }
 
   renderLoginButton() {
-    gapi.signin2.render(document.getElementById("googleLoginButton"));
-  }
-
-  logIn(){
-
+    gapi.signin2.render(document.getElementById("googleLoginButton"), {longtitle: true});
   }
 
   logOut() {
-    var auth2 = gapi.auth2.getAuthInstance();
     this.googleAuth.signOut().then( () => {
       console.log('***** User signed out.');
       this.currentUser = undefined;
       this.currentUserSubject.next(undefined);
+      this.ngZone.run(() => this.router.navigateByUrl("/"));
     });
   }
 
 
 
-  test() {
-    //Returns the GoogleAuth object. You must initialize the GoogleAuth object with gapi.auth2.init() before calling this method.
-    let googleAuth = gapi.auth2.getAuthInstance();
-    console.log("googleAuth= ", googleAuth);
-
-    //Returns whether the current user is currently signed in.
-    //true if the user is signed in, or false if the user is signed out or the GoogleAuth object isn't initialized.
-    console.log("GoogleAuth.isSignedIn.get()= ", googleAuth.isSignedIn.get());
-
-    let googleUser = googleAuth.currentUser.get();
-    console.log("googleUser= ", googleUser);
-
-    let basicProfile = googleUser.getBasicProfile();
-    console.log("profile= ", basicProfile);
-    console.log("email= ", basicProfile.getEmail());
-    /*
-    You can retrieve the properties of gapi.auth2.BasicProfile with the following methods:
-BasicProfile.getId()
-BasicProfile.getName()
-BasicProfile.getGivenName()
-BasicProfile.getFamilyName()
-BasicProfile.getImageUrl()
-BasicProfile.getEmail()
-     */
-  }
+//   test() {
+//     //Returns the GoogleAuth object. You must initialize the GoogleAuth object with gapi.auth2.init() before calling this method.
+//     let googleAuth = gapi.auth2.getAuthInstance();
+//     console.log("googleAuth= ", googleAuth);
+//
+//     //Returns whether the current user is currently signed in.
+//     //true if the user is signed in, or false if the user is signed out or the GoogleAuth object isn't initialized.
+//     console.log("GoogleAuth.isSignedIn.get()= ", googleAuth.isSignedIn.get());
+//
+//     let googleUser = googleAuth.currentUser.get();
+//     console.log("googleUser= ", googleUser);
+//
+//     let basicProfile = googleUser.getBasicProfile();
+//     console.log("profile= ", basicProfile);
+//     console.log("email= ", basicProfile.getEmail());
+//     /*
+//     You can retrieve the properties of gapi.auth2.BasicProfile with the following methods:
+// BasicProfile.getId()
+// BasicProfile.getName()
+// BasicProfile.getGivenName()
+// BasicProfile.getFamilyName()
+// BasicProfile.getImageUrl()
+// BasicProfile.getEmail()
+//      */
+//   }
 
   /*
    loadGoogleOauthAPI() {

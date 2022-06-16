@@ -1,36 +1,24 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable, of} from "rxjs";
-import {map, tap} from "rxjs/operators";
+import {GoogleOauthService} from "./google-oauth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuardService implements CanActivate {
 
-  constructor(private router: Router) {
-  }
+  constructor(private googleOAuthService: GoogleOauthService,
+              private router: Router,
+              private ngZone: NgZone) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-    console.log("AuthGuardService");
-    return  of(true);
-
-    // return this.socialAuthService.authState.pipe(
-    //   map((socialUser: SocialUser) => !!socialUser),
-    //   tap((isLoggedIn: boolean) => {
-    //     console.log("AuthGuardService canActivate(), isLoggedIn=", isLoggedIn);
-    //     if (!isLoggedIn) {
-    //       this.router.navigate(['login']);
-    //     }
-    //   })
-    // );
-
-    // this.socialAuthService.authState.subscribe((user) => {
-    //   console.log("AuthGuardService canActivate(), user=", user);
-    //       if (!user) {
-    //         this.router.navigate(['login']);
-    //       }
-    //   return  of(!!user);
-    // });
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    return new Promise((resolve, reject) =>{
+      setTimeout( () => {
+        if(this.googleOAuthService.isSignedIn()) resolve(true);
+        else { this.ngZone.run(() => this.router.navigateByUrl("/login"));
+          resolve(false);
+        }
+      }, 1000);
+    })
   }
 }
