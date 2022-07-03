@@ -26,7 +26,6 @@ import java.util.List;
 @Validated
 public class FilmRestController {
     private static final Logger LOG = LoggerFactory.getLogger(FilmRestController.class);
-
     private final FilmService filmService;
     private final FilmWikidataService filmWikidataService;
     private final ModelQuestionAnsweringService modelQuestionAnsweringService;
@@ -38,6 +37,26 @@ public class FilmRestController {
         this.filmWikidataService = filmWikidataService;
         this.modelQuestionAnsweringService = modelQuestionAnsweringService;
         this.modelRecomandariService = modelRecomandariService;
+    }
+
+    @GetMapping(value = "/toate-ale-utilizatorului/{userId}")
+    public ResponseEntity<List<FilmDto>> toateFilmeleUtilizatorului(@PathVariable Long userId) {
+        LOG.info("GET Toate filmele pentru  cu id-ul {}", userId);
+        return ResponseEntity.ok().body(filmService.toateFilmeleUtilizatorului(userId));
+    }
+
+
+
+    @GetMapping(value = "/wikidata/top-scor")
+    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopScor () throws JsonProcessingException {
+        LOG.info("GET Toate filmele de la WIKIDATA <<Top Scor>> ");
+        return ResponseEntity.ok().body(filmWikidataService.getFilmeTopScor());
+    }
+
+    @GetMapping(value = "/wikidata/cele-mai-noi")
+    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataCeleMaiNoi () throws JsonProcessingException {
+        LOG.info("GET Toate filmele de la WIKIDATA <<Cele Mai Noi>> ");
+        return ResponseEntity.ok().body(filmWikidataService.getFilmeCeleMaiNoi());
     }
 
 //    @GetMapping(value = "/toate-paginate")
@@ -62,15 +81,7 @@ public class FilmRestController {
         return ResponseEntity.ok().body(filmeWikiData);
     }
 
-    @GetMapping(value = "/wikidata/top-scor")
-    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopScor () throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA <<Top Scor>> ");
-        List<FilmWikiData> filmeWikiData;
 
-        filmeWikiData = filmWikidataService.getFilmeTopScor();
-
-        return ResponseEntity.ok().body(filmeWikiData);
-    }
 
     @GetMapping(value = "/wikidata/genuri")
     public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataGenuri (@RequestParam(required = false) List<String> genuri,
@@ -107,15 +118,7 @@ public class FilmRestController {
 
 
 
-    @GetMapping(value = "/toate-ale-utilizatorului/{userId}")
-    public ResponseEntity<List<FilmDto>> toateFilmeleUtilizatorului(@PathVariable Long userId) {
-        LOG.info("GET Toate filmele pentru  cu id-ul {}", userId);
-        List<FilmDto> filmeleUtilizatorului;
 
-        filmeleUtilizatorului = filmService.toateFilmeleUtilizatorului(userId);
-
-        return ResponseEntity.ok().body(filmeleUtilizatorului);
-    }
 
     @PostMapping(value = "/adauga-favorit/{userId}/{codFilmWikiData}")
     public ResponseEntity<String> adaugaFilmLaFavorite(@PathVariable Long userId, @PathVariable String codFilmWikiData) {

@@ -16,7 +16,7 @@
 
   <mat-card class="ms-2 col-md-8">
     <h2>Favorite Movies:</h2>
-    <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="'LIST'"></app-movie-list>
+    <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="DISPLAY_TYPE.LIST"></app-movie-list>
   </mat-card>
 </div>
 
@@ -24,13 +24,13 @@
   <h2>Movies By Status:</h2>
   <mat-tab-group animationDuration="0ms">
     <mat-tab label="COMPLETED">
-      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaCompleted" [displayType]="'STATUS_LIST'"></app-movie-list>
+      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaCompleted" [displayType]="DISPLAY_TYPE.STATUS_LIST"></app-movie-list>
     </mat-tab>
     <mat-tab label="WATCHING">
-      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="'STATUS_LIST'"></app-movie-list>
+      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="DISPLAY_TYPE.STATUS_LIST"></app-movie-list>
     </mat-tab>
     <mat-tab label="PLAN TO WATCH">
-      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="'STATUS_LIST'"></app-movie-list>
+      <app-movie-list *ngIf="listaFavorite" [listaFilmeWikiData]="listaFavorite" [displayType]="DISPLAY_TYPE.STATUS_LIST"></app-movie-list>
     </mat-tab>
   </mat-tab-group>
 </mat-card>

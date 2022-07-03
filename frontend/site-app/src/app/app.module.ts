@@ -20,9 +20,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {HttpClientModule} from "@angular/common/http";
 import {MovieListComponent} from './components/system/movie-list/movie-list.component';
-import {MovieFiltersComponent} from './components/system/movie-filters/movie-filters.component';
+import {MovieFiltersComponent} from './components/pages/movie-filters/movie-filters.component';
 import {FavoriteButtonComponent} from './components/system/favorite-button/favorite-button.component';
-import {SearchComponent} from './components/pages/search/search.component';
 import {UserProfileComponent} from './components/pages/user-profile/user-profile.component';
 import {MovieDetailsComponent} from "./components/pages/movie-details/movie-details.component";
 import {LoginComponent} from "./components/pages/login/login.component";
@@ -32,6 +31,7 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {MatTableModule} from "@angular/material/table";
 import {MatTabsModule} from "@angular/material/tabs";
+import { MovieGenreListComponent } from './components/system/movie-genre-list/movie-genre-list.component';
 
 @NgModule({
   declarations: [
@@ -46,8 +46,8 @@ import {MatTabsModule} from "@angular/material/tabs";
     MovieDetailsComponent,
     MovieFiltersComponent,
     FavoriteButtonComponent,
-    SearchComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    MovieGenreListComponent
   ],
   imports: [
     BrowserModule,

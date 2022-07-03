@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +20,6 @@ import java.util.List;
 @Validated
 public class UserRestController {
     private static final Logger LOG = LoggerFactory.getLogger(UserRestController.class);
-
     private final UserService userService;
 
     @Autowired
@@ -27,13 +27,19 @@ public class UserRestController {
         this.userService = userService;
     }
 
+    @GetMapping(value = "/{adresaEmail}")
+    public ResponseEntity<UserDto> getUserDupaAdresaEmail (@PathVariable String adresaEmail){
+        LOG.info("GET user dupa email, adresaEmail={}", adresaEmail);
+        return ResponseEntity.ok().body(userService.getUserDupaAdresaDeEmail(adresaEmail));
+    }
+
     @GetMapping(value = "/toti")
     public ResponseEntity<List<UserDto>> totiUserii (){
         LOG.info("GET toti userii");
-
         List<UserDto> useri = userService.totiUserii();
-
         return ResponseEntity.ok().body(useri);
     }
+
+
 
 }

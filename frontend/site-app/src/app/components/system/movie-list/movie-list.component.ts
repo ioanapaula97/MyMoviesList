@@ -4,6 +4,7 @@ import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
 import {MatTableDataSource} from "@angular/material/table";
+import {MoviesListDisplayTypeEnum} from "../../../model/MoviesListDisplayTypeEnum";
 
 @Component({
   selector: 'app-movie-list',
@@ -24,7 +25,7 @@ export class MovieListComponent implements OnInit {
   paginaFilme: any[];
 
   tableDataSource: any;
-  displayedColumns: string[] = ['favorit', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ];
+  displayedColumns: string[] | undefined;
   filmStatusEnum: any[] = [
     {view: '', value: null},
     {view: 'COMPLETED', value: 'COMPLETED'},
@@ -32,13 +33,21 @@ export class MovieListComponent implements OnInit {
     {view: 'WATCHING', value: 'WATCHING'}
   ];
 
+  DISPLAY_TYPE = MoviesListDisplayTypeEnum;
+
   constructor(private filmService: FilmService,
               private userService: UserService) {
   }
 
   ngOnInit(): void {
     if(!this.colMd) this.colMd = 'col-md-2';
+    this.displayedColumns = this.displayType === this.DISPLAY_TYPE.LIST ? ['favorit', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ]
+      : ['statusFilm', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ];
     this.getFilmeleUtilizatoruluiCurent();
+    this.initPaginatorAndMatTable();
+  }
+
+  initPaginatorAndMatTable() {
     this.totalElements = this.listaFilmeWikiData.length;
     this.paginator.initialized.subscribe(() => this.getPagina());
 

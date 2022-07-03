@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 public class FilmService {
     private static final Logger LOG = LoggerFactory.getLogger(FilmService.class);
-
     private final FilmRepository filmRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
@@ -38,9 +37,9 @@ public class FilmService {
 
         if (utilizator != null) lista = filmRepository.findAllByUtilizator(utilizator);
         if (lista != null) return lista.stream().map(this::mapToDto).collect(Collectors.toList());
-
         return new ArrayList<>();
     }
+
 
     @Transactional
     public Film getFilmDupaUserIdSiCodWikiData(Long userId, String codFilmWikiData){

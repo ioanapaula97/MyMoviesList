@@ -7,10 +7,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class FilmService {
-
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public getFilmeDupaGenuri(genuri?: string[], tipSortare?: TipSortareEnum): Observable<any> {
     return this.http.get(`/api/v1/film/wikidata/genuri?genuri=${genuri}&tipSortare=${tipSortare}`);
@@ -24,8 +21,16 @@ export class FilmService {
     return this.http.get(`/api/v1/film/wikidata/varsta?varsta=${varsta}&tipSortare=${tipSortare}`);
   }
 
+  public getFilmeRecomandate(): Observable<any> {
+    return this.http.get('/api/v1/film/model-recomandari-filme');
+  }
+
   public getFilmeDupaTopScor(): Observable<any> {
     return this.http.get('/api/v1/film/wikidata/top-scor');
+  }
+
+  public getFilmeCeleMaiNoi(): Observable<any> {
+    return this.http.get('/api/v1/film/wikidata/cele-mai-noi');
   }
 
   public getFilmeleUtilizatorului(userId: number): Observable<any> {

@@ -1,12 +1,16 @@
 package com.bdsa.disertatie.backend.service;
 
 import ai.onnxruntime.*;
+import com.bdsa.disertatie.backend.dto.InputModelQA;
+import org.eclipse.rdf4j.query.algebra.Str;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.nio.LongBuffer;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,32 +41,48 @@ public class ModelQuestionAnsweringService {
         }
     }
 
+    public InputModelQA prelucreazaIntrebare(String intrebare){
+         ///blasblasdas
+        InputModelQA inputModelQA = new InputModelQA();
+        inputModelQA.setQuestion(new long[]{0,1,5,3,8,27,6,7});
+        inputModelQA.setHead(17077L);
+        inputModelQA.setLength(new long[]{8});
+        return inputModelQA;
+    }
+
+    public String prelucreazaRaspuns (float[] values, long[] indices){
+        ///blasblasdas
+        return "";
+    }
 
     public String getRaspunsIntrebare(String intrebare) throws OrtException {
-        String raspuns = "";
+        InputModelQA inputModelQA = prelucreazaIntrebare(intrebare);
 
         Map<String, OnnxTensor> container = new HashMap<>();
 
-        OnnxTensor intrebareTensor = OnnxTensor.createTensor(env, LongBuffer.allocate(8), new long[]{8});
+        LongBuffer intrebareBuffer = LongBuffer
+                .wrap(inputModelQA.getQuestion(), 0, inputModelQA.getQuestion().length).asReadOnlyBuffer();
+        OnnxTensor intrebareTensor = OnnxTensor.createTensor(env, intrebareBuffer, new long[]{inputModelQA.getQuestion().length});
         container.put("question", intrebareTensor);
 
-        OnnxTensor lengthTensor = OnnxTensor.createTensor(env, LongBuffer.allocate(1), new long[]{1});
+        LongBuffer lengthBuffer = LongBuffer
+                .wrap(inputModelQA.getQuestion(), 0, inputModelQA.getLength().length).asReadOnlyBuffer();
+        OnnxTensor lengthTensor = OnnxTensor.createTensor(env, lengthBuffer, new long[]{inputModelQA.getLength().length});
         container.put("length", lengthTensor);
 
-        OnnxTensor headTensor = OnnxTensor.createTensor(env, 0L);
+        OnnxTensor headTensor = OnnxTensor.createTensor(env, inputModelQA.getHead());
         container.put("head", headTensor);
-            // Run the inference
-        try (OrtSession.Result results = session.run(container)) {
 
-            // Only iterates once
-            for (Map.Entry<String, OnnxValue> r : results) {
-                OnnxValue resultValue = r.getValue();
-                OnnxTensor resultTensor = (OnnxTensor) resultValue;
-                resultTensor.getValue();
-                LOG.info("Output Name: {}", r.getKey());
-                LOG.info("Output Value: {}, {}", r.getValue(), resultTensor);
-            }
+        float[] values; long[] indices;
+        // Apelare model QA
+        try (OrtSession.Result results = session.run(container)) {
+            values = ((float[][])results.get("values").get().getValue())[0];
+            indices = ((long[][])results.get("indices").get().getValue())[0];
         }
+        return prelucreazaRaspuns(values, indices);
+    }
+
+
 
 //        Map<String, LongBuffer> inputDataMap = new TreeMap<>(){{ put("question", LongBuffer.allocate(8)); put("head", LongBuffer.allocate(1)); put("length", LongBuffer.allocate(1));}};
 //        Iterator<Map.Entry<String, NodeInfo>> nodeInfoIterator = inputInfoMap.entrySet().iterator();
@@ -87,7 +107,4 @@ public class ModelQuestionAnsweringService {
 //        } catch (OrtException e) {
 //            e.printStackTrace();
 //        }
-        return raspuns;
-    }
-
 }

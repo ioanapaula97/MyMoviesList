@@ -15,12 +15,9 @@ export class FavoriteButtonComponent implements OnInit {
   @Output() statusFavoritChange = new EventEmitter<any | undefined>();
 
   constructor(private filmService: FilmService, private userService: UserService) {}
-
   ngOnInit(): void {}
 
-  getTooltip(film: any): string {
-    return Utils.getTooltipButonFavorite(film.codWikiData, this.coduriFilmeFavorite);
-  }
+  getTooltip(film: any): string {return Utils.getTooltipButonFavorite(film.codWikiData, this.coduriFilmeFavorite);}
 
   schimbaFavorite(film: any) {
     if (this.filmulEsteFavorit(film)) {
@@ -32,7 +29,5 @@ export class FavoriteButtonComponent implements OnInit {
     }
   }
 
-  filmulEsteFavorit(film: any) {
-    return Utils.filmulEsteFavorit(film.codWikiData, this.coduriFilmeFavorite);
-  }
+  filmulEsteFavorit(film: any) {return Utils.filmulEsteFavorit(film.codWikiData, this.coduriFilmeFavorite);}
 }

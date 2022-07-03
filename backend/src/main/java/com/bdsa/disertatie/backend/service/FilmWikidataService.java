@@ -24,9 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class FilmWikidataService {
 
-    //sortare: scor, data, box_office
-    //filtre: genuri, an, varsta
-
     private final ObjectMapper objectMapper;
 
     @Autowired
@@ -34,7 +31,8 @@ public class FilmWikidataService {
         this.objectMapper = objectMapper;
     }
 
-    public List<FilmWikiData> getFilmeDupaGen(List<String> genuri, TipSortareEnum tipSortare) throws JsonProcessingException {
+    public List<FilmWikiData> getFilmeDupaGen(List<String> genuri, TipSortareEnum tipSortare)
+            throws JsonProcessingException {
         String querySPARQL = getQueryStringDupaGenuri(genuri) + getConditieSortare(tipSortare) + LIMITA_FILME;
         String raspunsJsonString = executaQuerySPARQL(querySPARQL);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
@@ -65,6 +63,12 @@ public class FilmWikidataService {
     public List<FilmWikiData> getFilmeTopScor () throws JsonProcessingException {
         String raspunsJsonString = executaQuerySPARQL(QUERY_FILME_TOP_SCOR);
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
+
+        return lista;
+    }
+
+    public List<FilmWikiData> getFilmeCeleMaiNoi () throws JsonProcessingException {
+        List<FilmWikiData> lista = new ArrayList<>();
 
         return lista;
     }
@@ -116,21 +120,19 @@ public class FilmWikidataService {
 
         String userAgent = "Wikidata RDF4J Java Example/0.1 (https://query.wikidata.org/)";
         repo.setAdditionalHttpHeaders( Collections.singletonMap("User-Agent", userAgent ) );
-
         String raspunsJsonString = "" ;
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             repo.getConnection().prepareTupleQuery(querySPQRQL).evaluate(new SPARQLResultsJSONWriter(out));
-
             raspunsJsonString = out.toString();
         } catch ( Exception exception ) {
             exception.printStackTrace();
         }
-
         return raspunsJsonString;
     }
 
-    private List<FilmWikiData> parseazeListaFilmeDeLaWikiData (String raspunsJsonString) throws JsonProcessingException {
+    private List<FilmWikiData> parseazeListaFilmeDeLaWikiData (String raspunsJsonString)
+            throws JsonProcessingException {
         List<FilmWikiData> listaFilme = new ArrayList<>();
 
         JsonNode jsonNode = objectMapper.readTree(raspunsJsonString);
@@ -149,7 +151,6 @@ public class FilmWikidataService {
             filmWikiData.setAnAparitie(film.at("/anAparitie/value").asText().split("-")[0]);
             listaFilme.add(filmWikiData);
         }
-
         return listaFilme;
     }
 
@@ -191,7 +192,8 @@ public class FilmWikidataService {
         return actori;
     }
 
-    private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
+    private final static String QUERY_FILME_DUPA_GENURI =
+            "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
             "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
             "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Getter
@@ -17,6 +18,7 @@ public class FilmDto {
     private Long id;
     private LocalDateTime created;
     private LocalDateTime version;
+    @Pattern(regexp = "^[a-zA-Z0-9]{0,10}$")
     private String codWikiData;
     private Boolean esteFavorit;
     private StatusFilmEnum statusFilm;

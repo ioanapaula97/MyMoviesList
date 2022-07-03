@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {GoogleUser} from "../../../model/GoogleUser";
 import {GoogleOauthService} from "../../../service/google-oauth.service";
 import {Router} from "@angular/router";
+import {MoviesListDisplayTypeEnum} from "../../../model/MoviesListDisplayTypeEnum";
 
 @Component({
   selector: 'app-user-profile',
@@ -10,6 +11,8 @@ import {Router} from "@angular/router";
 })
 export class UserProfileComponent implements OnInit {
   currentUser: GoogleUser | undefined;
+
+  DISPLAY_TYPE = MoviesListDisplayTypeEnum;
 
   listaFavorite = [
     {

@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
-
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
@@ -26,12 +25,20 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public List<UserDto> totiUserii(){
-        return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
-    }
+    public UserDto getUserDupaAdresaDeEmail(String adresaEmail){
+        return mapToDto(userRepository.findByUsername(adresaEmail));}
 
     public UserDto mapToDto (Utilizator entity){
         return modelMapper.map(entity, UserDto.class);
     }
+
+
+
+
+    public List<UserDto> totiUserii(){
+        return userRepository.findAll().stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+
 
 }

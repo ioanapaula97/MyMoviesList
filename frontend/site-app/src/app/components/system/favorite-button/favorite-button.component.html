@@ -1,5 +1,6 @@
 <button mat-mini-fab [matTooltip]="getTooltip(filmCurent)" [matTooltipPosition]="'left'"
-        [ngClass]="filmulEsteFavorit(filmCurent) ? 'is-favorite' : 'not-favorite'" aria-label="adauga la favorite"
-        (click)="schimbaFavorite(filmCurent)">
+        [ngClass]="filmulEsteFavorit(filmCurent) ? 'is-favorite' : 'not-favorite'"
+        aria-label="adauga la favorite" (click)="schimbaFavorite(filmCurent)">
   <mat-icon>star</mat-icon>
 </button>
+
