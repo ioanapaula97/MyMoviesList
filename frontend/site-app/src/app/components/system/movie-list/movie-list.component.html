@@ -78,7 +78,7 @@
         <th mat-header-cell *matHeaderCellDef> Genres </th>
         <td mat-cell *matCellDef="let element">
           <mat-chip-list>
-            <mat-chip *ngFor="let gen of element.genuri">{{gen.denumireGen}}</mat-chip>
+            <app-movie-genre-list [film]="element"></app-movie-genre-list>
           </mat-chip-list>
         </td>
       </ng-container>
