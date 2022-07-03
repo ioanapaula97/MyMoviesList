@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {TipSortareEnum} from "../model/TipSortareEnum";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -22,14 +22,20 @@ export class FilmService {
   }
 
   public getFilmeRecomandate(): Observable<any> {
-    return this.http.get('/api/v1/film/model-recomandari-filme');
+    console.log( '***FILM SERVICE*** getFilmeRecomandate');
+    return of([{},{}]);
+    // return this.http.get('/api/v1/film/model-recomandari-filme');
   }
 
   public getFilmeDupaTopScor(): Observable<any> {
+    console.log( '***FILM SERVICE*** getFilmeDupaTopScor');
+    // return of([{},{}]);
     return this.http.get('/api/v1/film/wikidata/top-scor');
   }
 
   public getFilmeCeleMaiNoi(): Observable<any> {
+    console.log( '***FILM SERVICE*** getFilmeCeleMaiNoi');
+    // return of([{},{}]);
     return this.http.get('/api/v1/film/wikidata/cele-mai-noi');
   }
 

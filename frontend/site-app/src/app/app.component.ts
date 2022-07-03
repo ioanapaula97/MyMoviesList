@@ -10,8 +10,11 @@ export class AppComponent implements OnInit{
   title = 'MyMoviesList';
 
   ngOnInit() {
+    console.log("AppComponent ngOnInit");
     this.googleOAuthService.loadGoogleOauthAPI();
   }
 
-  constructor(private googleOAuthService: GoogleOauthService) {}
+  constructor(private googleOAuthService: GoogleOauthService) {
+    console.log("AppComponent constructor");
+  }
 }

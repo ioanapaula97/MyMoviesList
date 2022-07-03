@@ -3,6 +3,7 @@ import {environment} from "../../environments/environment";
 import {GoogleUser} from "../model/GoogleUser";
 import {BehaviorSubject} from "rxjs";
 import {Router} from "@angular/router";
+import {Utils} from "../utils/Utils";
 
 declare var gapi: any;
 @Injectable({providedIn: 'root'})
@@ -22,6 +23,7 @@ export class GoogleOauthService {
 
   listenForUserSignedInStateChanges(){
     this.googleAuth.isSignedIn.listen((isSignedIn:boolean) => {
+      console.log("!!!SIGNED IN STATE CHANGED");
       if(isSignedIn) { this.updateCurrentUser(); }
       if((this.currentUser !== undefined) && (this.router.url === '/login')) {
         this.ngZone.run(() => this.router.navigateByUrl("/"));}});}
@@ -37,6 +39,7 @@ export class GoogleOauthService {
 
   logOut() {
     this.googleAuth.signOut().then( () => {
+      Utils.setEmailUserCurentInLocalStorage('none');
       this.currentUser = undefined; this.currentUserSubject.next(undefined);
-      this.ngZone.run(() => this.router.navigateByUrl("/"));});}
+      this.ngZone.run(() => this.router.navigateByUrl("/login"));});}
 }

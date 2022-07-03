@@ -2,6 +2,7 @@ import {ChangeDetectorRef, Component, NgZone, OnInit} from '@angular/core';
 import {GoogleOauthService} from "../../../service/google-oauth.service";
 import {GoogleUser} from "../../../model/GoogleUser";
 import {Router} from "@angular/router";
+import {Utils} from "../../../utils/Utils";
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,7 @@ export class HeaderComponent implements OnInit {
     this.googleOAuthService.currentUserSubject.subscribe((user) =>{
       this.currentUser = user;
       console.log('HEADER currentUser=',this.currentUser);
+      if(this.currentUser) Utils.setEmailUserCurentInLocalStorage(this.currentUser.email);
       this.changeDetectorRef.detectChanges();
     });
 

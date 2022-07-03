@@ -28,6 +28,23 @@ export class Utils{
     return JSON.parse(filmStr) as Object;
   }
 
+  public static setListaFilmeInLocalStorage(numeLista: string, listaFilme: any) {
+    localStorage.setItem(numeLista, JSON.stringify(listaFilme));
+  }
+
+  public static getListaFilmeDinLocalStorage(numeLista: string): any {
+    let listaFilmeStr: string = localStorage.getItem(numeLista) || '[]';
+    return JSON.parse(listaFilmeStr) as Object;
+  }
+
+  public static setEmailUserCurentInLocalStorage(email: string) {
+    localStorage.setItem('emailUserCurent', email);
+  }
+
+  public static getEmailUserCurentDinLocalStorage(): string {
+    return  localStorage.getItem('emailUserCurent') || '';
+  }
+
   public static shuffleArray (array:any[]) {
     let currentIndex = array.length,  randomIndex;
 

@@ -8,6 +8,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.rdf4j.query.algebra.Str;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriter;
@@ -15,6 +17,7 @@ import org.eclipse.rdf4j.repository.sparql.SPARQLRepository;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,6 +26,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class FilmWikidataService {
+    private static final Logger LOG = LoggerFactory.getLogger(FilmWikidataService.class);
 
     private final ObjectMapper objectMapper;
 
@@ -68,7 +72,8 @@ public class FilmWikidataService {
     }
 
     public List<FilmWikiData> getFilmeCeleMaiNoi () throws JsonProcessingException {
-        List<FilmWikiData> lista = new ArrayList<>();
+        String raspunsJsonString = executaQuerySPARQL(QUERY_FILME_CELE_MAI_NOI);
+        List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
     }
@@ -115,6 +120,8 @@ public class FilmWikidataService {
     }
 
     private String executaQuerySPARQL (String querySPQRQL){
+        LOG.info("START executaQuerySPARQL");
+        LocalDateTime startTime = LocalDateTime.now();
         String sparqlEndpoint = "https://query.wikidata.org/sparql";
         SPARQLRepository repo = new SPARQLRepository(sparqlEndpoint);
 
@@ -128,6 +135,8 @@ public class FilmWikidataService {
         } catch ( Exception exception ) {
             exception.printStackTrace();
         }
+        LocalDateTime endTime = LocalDateTime.now();
+        LOG.info("END executaQuerySPARQL, timp executie= {} seconds", ChronoUnit.SECONDS.between(startTime, endTime));
         return raspunsJsonString;
     }
 
@@ -353,6 +362,31 @@ LIMIT 20
             "ORDER BY desc(?scorReview)\n" +
             "LIMIT 20";
 
+    private final static String QUERY_FILME_CELE_MAI_NOI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
+            "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
+            "WHERE {\n" +
+            "  ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
+            "                  ps:P577 ?anAparitie ].\n" +
+            "  ?movie wdt:P2047 ?durata.\n" +
+            "  ?movie wdt:P136 ?genre. \n" +
+            "  ?movie wdt:P57 ?directorId.\n" +
+            "  ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
+            "                  ps:P444 ?scorReview] .\n" +
+            "  ?movie wdt:P18 ?urlImagine.  \n" +
+            "  ?movie wdt:P161 ?castId.\n" +
+            "  SERVICE wikibase:label { \n" +
+            "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
+            "    ?movie rdfs:label ?titlu.\n" +
+            "    ?movie schema:description ?descriere.   \n" +
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director ?Idgenuri\n" +
+            "ORDER BY desc(?anAparitie)\n" +
+            "LIMIT 20";
 
     private final static String CONDITIE_SORTARE_SCOR_DESC = "ORDER BY desc(?scorReview)\n";
     private final static String CONDITIE_SORTARE_SCOR_ASC = "ORDER BY asc(?scorReview)\n";
