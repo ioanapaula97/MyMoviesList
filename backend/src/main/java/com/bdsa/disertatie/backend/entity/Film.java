@@ -4,6 +4,7 @@ package com.bdsa.disertatie.backend.entity;
 import com.bdsa.disertatie.backend.enums.StatusFilmEnum;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "film",
@@ -20,7 +21,7 @@ public class Film extends BaseEntity{
     private Boolean esteFavorit;
     @Enumerated(EnumType.STRING) //pentru a salva valoarea textuala din enum (nu codul)
     private StatusFilmEnum statusFilm;
-    private Integer notaFilm;
+    private BigDecimal notaFilm;
 
     public Utilizator getUtilizator() {
         return utilizator;
@@ -54,11 +55,11 @@ public class Film extends BaseEntity{
         this.statusFilm = statusFilm;
     }
 
-    public Integer getNotaFilm() {
+    public BigDecimal getNotaFilm() {
         return notaFilm;
     }
 
-    public void setNotaFilm(Integer notaFilm) {
+    public void setNotaFilm(BigDecimal notaFilm) {
         this.notaFilm = notaFilm;
     }
 }

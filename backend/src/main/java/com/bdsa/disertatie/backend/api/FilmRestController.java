@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -145,7 +146,7 @@ public class FilmRestController {
     @PostMapping(value = "/acorda-nota")
     public ResponseEntity<String> acordaNotaFilm(@RequestParam Long userId,
                                                  @RequestParam String codFilmWikiData,
-                                                 @RequestParam(required = false) Integer nota) {
+                                                 @RequestParam(required = false) BigDecimal nota) {
         LOG.info("POST Acorda nota film userId= {}, codFilmWikiData= {}, nota={}", userId, codFilmWikiData, nota);
 
         filmService.acordaNotaFilm(userId, codFilmWikiData, nota);
@@ -176,11 +177,10 @@ public class FilmRestController {
     }
 
     @GetMapping(value = "/model-recomandari-filme")
-    public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari () throws OrtException {
+    public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari (@RequestParam(name = "user_id", required = false) Long userId) throws OrtException {
         LOG.info("GET filme din Model Machine Learning Recomandari");
-        List<Integer> idsUseri = new ArrayList<>(Arrays.asList(1,1,1,1,1,1));
-        List<Integer> idsFilme = new ArrayList<>(Arrays.asList(8,143,175,285,203,400));
-        modelRecomandariService.getRecomandariFilme(idsUseri, idsFilme);
+
+        modelRecomandariService.getRecomandariFilme(userId);
 
         return ResponseEntity.ok().build();
     }

@@ -39,7 +39,7 @@ export class HomeComponent implements OnInit {
       if(this.emailUserCurent){
         this.listaFilmeRecomandate = Utils.getListaFilmeDinLocalStorage('listaFilmeRecomandate');
         if(this.emailUserInLocalStorage !== this.emailUserCurent || !this.listaFilmeRecomandate || this.listaFilmeRecomandate.length === 0){
-          this.filmService.getFilmeRecomandate().subscribe((resp) => {
+          this.filmService.getFilmeRecomandate(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
             this.listaFilmeRecomandate = resp ? resp : [] ;
             this.setListaFilmeInLocalStorage('listaFilmeRecomandate', this.listaFilmeRecomandate);
           });

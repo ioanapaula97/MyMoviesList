@@ -25,10 +25,10 @@ export class FilmService {
     return this.http.get(`/api/v1/film/wikidata/varsta?varsta=${varsta}&tipSortare=${tipSortare}`);
   }
 
-  public getFilmeRecomandate(): Observable<any> {
+  public getFilmeRecomandate(userId: number): Observable<any> {
     console.log( '***FILM SERVICE*** getFilmeRecomandate');
-    return of([{},{}]);
-    // return this.http.get('/api/v1/film/model-recomandari-filme');
+    // return of([{},{}]);
+    return this.http.get(`/api/v1/film/model-recomandari-filme?user_id=${userId}`);
   }
 
   public getFilmeDupaTopScor(): Observable<any> {
