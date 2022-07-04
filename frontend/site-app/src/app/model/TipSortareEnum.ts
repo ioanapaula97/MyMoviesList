@@ -1,6 +1,6 @@
 export enum TipSortareEnum{
   SCOR_DESC = "SCOR_DESC",
   SCOR_ASC = "SCOR_ASC",
-  DATA = "DATA",
-  BOX_OFFICE = "BOX_OFFICE"
+  DATA_DESC = "DATA_DESC",
+  DATA_ASC = "DATA_ASC"
 }

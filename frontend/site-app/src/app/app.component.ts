@@ -11,7 +11,9 @@ export class AppComponent implements OnInit{
 
   ngOnInit() {
     console.log("AppComponent ngOnInit");
-    this.googleOAuthService.loadGoogleOauthAPI();
+    setTimeout(() =>{
+      this.googleOAuthService.loadGoogleOauthAPI();
+    }, 100);
   }
 
   constructor(private googleOAuthService: GoogleOauthService) {

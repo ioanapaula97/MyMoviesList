@@ -37,9 +37,12 @@ public class FilmWikidataService {
 
     public List<FilmWikiData> getFilmeDupaGen(List<String> genuri, TipSortareEnum tipSortare)
             throws JsonProcessingException {
-        String querySPARQL = getQueryStringDupaGenuri(genuri) + getConditieSortare(tipSortare) + LIMITA_FILME;
-        String raspunsJsonString = executaQuerySPARQL(querySPARQL);
-        List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
+        List<FilmWikiData> lista = new ArrayList<>();
+        if(genuri != null){
+            String querySPARQL = getQueryStringDupaGenuri(genuri) + getConditieSortare(tipSortare) + LIMITA_FILME;
+            String raspunsJsonString = executaQuerySPARQL(querySPARQL);
+            lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
+        }
 
         return lista;
     }
@@ -58,10 +61,6 @@ public class FilmWikidataService {
         List<FilmWikiData> lista = parseazeListaFilmeDeLaWikiData(raspunsJsonString);
 
         return lista;
-    }
-
-    public List<FilmWikiData> getFilmeTopBoxOffice (){
-        return getFilmeSortat(TipSortareEnum.BOX_OFFICE);
     }
 
     public List<FilmWikiData> getFilmeTopScor () throws JsonProcessingException {
@@ -85,16 +84,18 @@ public class FilmWikidataService {
     }
 
     private String getQueryStringDupaGenuri(List<String> genuri) {
-        if(genuri == null) genuri = new ArrayList<>(Arrays.asList("Q130232"));
+//        if(genuri == null) genuri = new ArrayList<>(Arrays.asList("Q130232"));
+        if(genuri != null) {
+            String genuriConcatenate = "";
+            for(int i=0; i<genuri.size(); i++){
+                String gen = genuri.get(i);
+                genuriConcatenate += "wd:" + gen;
+                if (i < genuri.size() -1) genuriConcatenate += " , ";
+            }
 
-        String genuriConcatenate = "";
-        for(int i=0; i<genuri.size(); i++){
-            String gen = genuri.get(i);
-            genuriConcatenate += "wd:" + gen;
-            if (i < genuri.size() -1) genuriConcatenate += " , ";
+            return QUERY_FILME_DUPA_GENURI.replace("<<<GENURI>>>", genuriConcatenate);
         }
-
-        return QUERY_FILME_DUPA_GENURI.replace("<<<GENURI>>>", genuriConcatenate);
+        return null;
     }
 
     private String getQueryStringDupaAnAparitie(Integer an) {
@@ -121,6 +122,7 @@ public class FilmWikidataService {
 
     private String executaQuerySPARQL (String querySPQRQL){
         LOG.info("START executaQuerySPARQL");
+        LOG.info("QUERY SPARQL =\n {}", querySPQRQL);
         LocalDateTime startTime = LocalDateTime.now();
         String sparqlEndpoint = "https://query.wikidata.org/sparql";
         SPARQLRepository repo = new SPARQLRepository(sparqlEndpoint);
@@ -201,7 +203,7 @@ public class FilmWikidataService {
         return actori;
     }
 
-    private final static String QUERY_FILME_DUPA_GENURI =
+    private final static String QUERY_FILME_DUPA_GENURI_0 =
             "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
             "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
             "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
@@ -226,6 +228,36 @@ public class FilmWikidataService {
             "    ?genre rdfs:label ?genreL. \n" +
             "    ?castId rdfs:label ?castMember.\n" +
             "    ?directorId rdfs:label ?director.}\n" +
+            "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director ?Idgenuri\n";
+
+    private final static String QUERY_FILME_DUPA_GENURI = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +
+            "(group_concat(distinct ?genreL;separator=\"; \") as ?genuri)\n" +
+            "(group_concat(distinct ?genre;separator=\"; \") as ?Idgenuri)\n" +
+            "(group_concat(distinct ?castMember;separator=\"; \") as ?actori)\n" +
+            "(group_concat(distinct ?castId;separator=\"; \") as ?Idactori)\n" +
+            "WHERE {\n" +
+            "   { \n" +
+            "      SELECT ?movie ?anAparitie ?durata ?genre ?directorId ?scorReview ?urlImagine ?castId WHERE {\n" +
+            "         ?movie wdt:P136 <<<GENURI>>>.\n" +
+            "         ?movie p:P577 [ pq:P291 wd:Q30 ; # place of publication in uniated states for the anAparitie\n" +
+            "                   ps:P577 ?anAparitie ].\n" +
+            "         ?movie wdt:P2047 ?durata.\n" +
+            "         ?movie wdt:P136 ?genre. \n" +
+            "         ?movie wdt:P57 ?directorId.\n" +
+            "         ?movie p:P444 [ pq:P459 wd:Q108403393;\n" +
+            "                         ps:P444 ?scorReview] .\n" +
+            "         ?movie wdt:P18 ?urlImagine.  \n" +
+            "         ?movie wdt:P161 ?castId.\n" +
+            "      }\n" +
+            "   }   \n" +
+            "  SERVICE wikibase:label { \n" +
+            "    bd:serviceParam wikibase:language \"[AUTO_LANGUAGE],en\". \n" +
+            "    ?movie rdfs:label ?titlu.\n" +
+            "    ?movie schema:description ?descriere.   \n" +
+            "    ?genre rdfs:label ?genreL. \n" +
+            "    ?castId rdfs:label ?castMember.\n" +
+            "    ?directorId rdfs:label ?director.}\n" +
+            "  \n" +
             "} GROUP BY ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director ?Idgenuri\n";
 
     private final static String QUERY_FILME_DUPA_AN_APARITIE = "SELECT ?movie ?titlu ?descriere ?anAparitie ?durata ?urlImagine ?scorReview ?director  \n" +

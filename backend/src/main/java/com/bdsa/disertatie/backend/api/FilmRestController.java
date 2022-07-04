@@ -3,6 +3,7 @@ package com.bdsa.disertatie.backend.api;
 import ai.onnxruntime.OrtException;
 import com.bdsa.disertatie.backend.dto.FilmDto;
 import com.bdsa.disertatie.backend.dto.FilmWikiData;
+import com.bdsa.disertatie.backend.dto.RaspunsModelQA;
 import com.bdsa.disertatie.backend.enums.StatusFilmEnum;
 import com.bdsa.disertatie.backend.enums.TipSortareEnum;
 import com.bdsa.disertatie.backend.service.FilmService;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,51 +72,53 @@ public class FilmRestController {
 //        return ResponseEntity.ok().body(pagina);
 //    }
 
-    @GetMapping(value = "/wikidata/top-box-office")
-    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopBoxOffice () throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA <<Top Box Office>> ");
+//    @GetMapping(value = "/wikidata/top-box-office")
+//    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopBoxOffice () throws JsonProcessingException {
+//        LOG.info("GET Toate filmele de la WIKIDATA <<Top Box Office>> ");
+//
+//        List<FilmWikiData> filmeWikiData;
+//
+//        filmeWikiData = filmWikidataService.getFilmeTopBoxOffice();
+//
+//        return ResponseEntity.ok().body(filmeWikiData);
+//    }
 
-        List<FilmWikiData> filmeWikiData;
-
-        filmeWikiData = filmWikidataService.getFilmeTopBoxOffice();
-
-        return ResponseEntity.ok().body(filmeWikiData);
-    }
 
 
+    @GetMapping(value = "/wikidata/filtre")
+    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataFiltre (@RequestParam(name = "GENRES", required = false) List<String> genuri,
+                                                                      @RequestParam(name = "YEAR", required = false) Integer an,
+                                                                      @RequestParam(name = "SCORE", required = false) Integer scor,
+                                                                      @RequestParam(name = "SORT", required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
+        LOG.info("GET Toate filmele de la WIKIDATA dupa filtre, genuri= {}, an= {}, scor={}, tipSortare= {}", genuri, an, scor, tipSortare);
+        List<FilmWikiData> filmeWikiData = new ArrayList<>();
 
-    @GetMapping(value = "/wikidata/genuri")
-    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataGenuri (@RequestParam(required = false) List<String> genuri,
-                                                                      @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA dupa genuri= {}, tipSortare= {}", genuri, tipSortare);
-        List<FilmWikiData> filmeWikiData;
-
-        filmeWikiData = filmWikidataService.getFilmeDupaGen(genuri, tipSortare);
-
-        return ResponseEntity.ok().body(filmeWikiData);
-    }
-
-    @GetMapping(value = "/wikidata/an-aparitie")
-    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataAnAparitie (@RequestParam(required = false) Integer anAparitie,
-                                                                          @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA dupa anAparitie= {}, tipSortare= {}", anAparitie, tipSortare);
-        List<FilmWikiData> filmeWikiData;
-
-        filmeWikiData = filmWikidataService.getFilmeDupaAnAparitie(anAparitie, tipSortare);
+//        filmeWikiData = filmWikidataService.getFilmeDupaGen(genuri, tipSortare);
 
         return ResponseEntity.ok().body(filmeWikiData);
     }
 
-    @GetMapping(value = "/wikidata/varsta")
-    public ResponseEntity<List<FilmWikiData>> getFilmeDupaVarstaPermisa (@RequestParam(required = false) String varsta,
-                                                                         @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA dupa varsta= {}, tipSortare= {}", varsta, tipSortare);
-        List<FilmWikiData> filmeWikiData;
-
-        filmeWikiData = filmWikidataService.getFilmeDupaVarstaPermisa(varsta, tipSortare);
-
-        return ResponseEntity.ok().body(filmeWikiData);
-    }
+//    @GetMapping(value = "/wikidata/an-aparitie")
+//    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataAnAparitie (@RequestParam(required = false) Integer anAparitie,
+//                                                                          @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
+//        LOG.info("GET Toate filmele de la WIKIDATA dupa anAparitie= {}, tipSortare= {}", anAparitie, tipSortare);
+//        List<FilmWikiData> filmeWikiData;
+//
+//        filmeWikiData = filmWikidataService.getFilmeDupaAnAparitie(anAparitie, tipSortare);
+//
+//        return ResponseEntity.ok().body(filmeWikiData);
+//    }
+//
+//    @GetMapping(value = "/wikidata/varsta")
+//    public ResponseEntity<List<FilmWikiData>> getFilmeDupaVarstaPermisa (@RequestParam(required = false) String varsta,
+//                                                                         @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
+//        LOG.info("GET Toate filmele de la WIKIDATA dupa varsta= {}, tipSortare= {}", varsta, tipSortare);
+//        List<FilmWikiData> filmeWikiData;
+//
+//        filmeWikiData = filmWikidataService.getFilmeDupaVarstaPermisa(varsta, tipSortare);
+//
+//        return ResponseEntity.ok().body(filmeWikiData);
+//    }
 
 
 
@@ -161,11 +165,14 @@ public class FilmRestController {
     }
 
     @GetMapping(value = "/model-qa-raspuns-intrebare")
-    public ResponseEntity<String> getRaspunsDinModelMachineLearningQA (@RequestParam(required = false) String intrebare) throws OrtException {
+    public ResponseEntity<RaspunsModelQA> getRaspunsDinModelMachineLearningQA (@RequestParam(name = "QUESTION", required = false) String intrebare) throws OrtException {
         LOG.info("GET raspuns intrebare din Model Machine Learning QA , intrebare= {}", intrebare);
 
+        RaspunsModelQA raspunsModelQA= new RaspunsModelQA();
 
-        return ResponseEntity.ok().body(modelQuestionAnsweringService.getRaspunsIntrebare(intrebare));
+//        return ResponseEntity.ok().body(modelQuestionAnsweringService.getRaspunsIntrebare(intrebare));
+        raspunsModelQA.setRaspuns("raspuns " + LocalDateTime.now());
+        return ResponseEntity.ok().body(raspunsModelQA);
     }
 
     @GetMapping(value = "/model-recomandari-filme")

@@ -9,8 +9,12 @@ import {Observable, of} from "rxjs";
 export class FilmService {
   constructor(private http: HttpClient) {}
 
-  public getFilmeDupaGenuri(genuri?: string[], tipSortare?: TipSortareEnum): Observable<any> {
-    return this.http.get(`/api/v1/film/wikidata/genuri?genuri=${genuri}&tipSortare=${tipSortare}`);
+  public getRaspunsIntrebare(intrebare: string): Observable<any> {
+    return this.http.get(`/api/v1/film/model-qa-raspuns-intrebare${intrebare}`);
+  }
+
+  public getFilmeDupaFiltre(filtreActive: string): Observable<any> {
+    return this.http.get(`/api/v1/film/wikidata/filtre${filtreActive}`);
   }
 
   public getFilmeDupaAnAparitie(anAparitie?: number, tipSortare?: TipSortareEnum): Observable<any> {
