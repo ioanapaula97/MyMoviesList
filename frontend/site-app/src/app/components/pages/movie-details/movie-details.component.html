@@ -42,7 +42,10 @@
   <div class="col-md-2">
     <h2>Actors: </h2>
     <ul class="list-group list">
-      <li class="list-group-item" *ngFor="let actor of filmSelectatWikiData.actori">{{actor.numeActor}}</li>
+      <li class="list-group-item nav-link" *ngFor="let actor of filmSelectatWikiData.actori"
+          (click)="cautaFilmeDupaActorulSelectat(actor)">
+        <a>{{actor.numeActor}}</a>
+      </li>
     </ul>
   </div>
 

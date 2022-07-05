@@ -136,7 +136,7 @@ export class MovieFiltersComponent implements OnInit {
       this.sortareSelectata = (params[QueryParamsEnum.SORT] || '') || '';
 
       this.genParam = Utils.getGenSelectatDinLocalStorage() || {};
-      this.actorParam = (params[QueryParamsEnum.ACTOR] || '') || {};
+      this.actorParam = Utils.getActorSelectatDinLocalStorage() || {};
 
       console.log("genuriSelectate= ", this.genuriSelectate);
       console.log("anSelectat= ", this.anSelectat);
@@ -178,6 +178,12 @@ export class MovieFiltersComponent implements OnInit {
     }
 
     if(filtreActive.includes(QueryParamsEnum.GEN + '=') || filtreActive.includes(QueryParamsEnum.ACTOR + '=')){
+      if(filtreActive.includes(QueryParamsEnum.GEN + '=')){
+        this.actorParam = undefined;
+      }
+      if(filtreActive.includes(QueryParamsEnum.ACTOR + '=')){
+        this.genParam = undefined;
+      }
       this.ACTOR_SAU_GEN = true;
       this.FILTER_SEARCH = false;
       this.QUESTION_SEARCH = false;
@@ -208,7 +214,7 @@ export class MovieFiltersComponent implements OnInit {
           //  res = Utils.shuffleArray(res);
 
           this.listaFilmeWikiData = res || [];
-          console.log("GET DATA dupa genuri, genuri =", this.genuriSelectate, ", res=", res);
+          console.log("Rezultat cautare dupa filtre active = ", filtreActive, ", res=", res);
           this.listaRezultatComp.listaFilmeWikiData = this.listaFilmeWikiData;
           this.listaRezultatComp.getPagina();
         });

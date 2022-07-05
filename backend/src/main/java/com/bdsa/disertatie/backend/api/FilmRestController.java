@@ -75,9 +75,15 @@ public class FilmRestController {
                                                                       @RequestParam(name = "ACTOR", required = false) String actor) throws JsonProcessingException {
         LOG.info("GET Toate filmele de la WIKIDATA dupa filtre, genuri= {}, an= {}, scor={}, tipSortare= {}, gen= {}, actor= {}",
                 genuri, an, scor, tipSortare, gen, actor);
-        List<FilmWikiData> filmeWikiData = new ArrayList<>();
+        List<FilmWikiData> filmeWikiData;
 
-//        filmeWikiData = filmWikidataService.getFilmeDupaGen(genuri, tipSortare);
+        if(actor != null){
+            filmeWikiData = filmWikidataService.getFilmeDupaActor(actor, tipSortare);
+        } else if (gen != null){
+            filmeWikiData = filmWikidataService.getFilmeDupaGen(gen, tipSortare);
+        } else{
+            filmeWikiData = filmWikidataService.getFilmeDupaFiltreCombinate(genuri, an, scor, tipSortare);
+        }
 
         return ResponseEntity.ok().body(filmeWikiData);
     }

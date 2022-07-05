@@ -3,6 +3,8 @@ import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
 import {StatusFilmEnum} from "../../../model/StatusFilmEnum";
+import {QueryParamsEnum} from "../../../model/QueryParamsEnum";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-movie-details',
@@ -22,7 +24,8 @@ export class MovieDetailsComponent implements OnInit {
   STATUS_ENUM = StatusFilmEnum;
 
   constructor(private filmService: FilmService,
-              private userService: UserService) {
+              private userService: UserService,
+              private router: Router) {
   }
 
   ngOnInit(): void {
@@ -47,6 +50,20 @@ export class MovieDetailsComponent implements OnInit {
     console.log("onNotaChange $event=", $event);
     this.filmService.acordaNotaFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectatWikiData.codWikiData, $event.value)
       .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
+  }
+
+  cautaFilmeDupaActorulSelectat(actor:any){
+    Utils.setActorSelectatInLocalStorage(actor);
+    this.adaugaActorInUrlSiSchimbaRuta(actor.codWikiData);
+
+  }
+
+  adaugaActorInUrlSiSchimbaRuta(codActor: string){
+    let urlCuFiltreActive = 'search';
+    if (codActor && codActor.trim()) {
+      urlCuFiltreActive += ('?' + QueryParamsEnum.ACTOR + '=' + codActor.trim());
+    }
+    this.router.navigateByUrl(urlCuFiltreActive);
   }
 
 }

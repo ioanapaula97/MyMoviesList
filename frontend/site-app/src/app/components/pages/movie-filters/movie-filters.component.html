@@ -1,6 +1,7 @@
 <div class="m-5">
   <ng-container *ngIf="ACTOR_SAU_GEN">
-    <h1>This are other movies with the genre: <span class="fw-bold">{{genParam.denumireGen}}</span></h1>
+    <h1 *ngIf="genParam">This are other movies with the genre: <span class="fw-bold">{{genParam.denumireGen}}</span></h1>
+    <h1 *ngIf="actorParam">This are other movies in which the actor <span class="fw-bold">{{actorParam.numeActor}}</span> played.</h1>
   </ng-container>
 
   <ng-container *ngIf="!ACTOR_SAU_GEN">
@@ -60,7 +61,7 @@
 
 
   <h1 class="mt-3">Result: </h1>
-  <div *ngIf="FILTER_SEARCH">
+  <div *ngIf="FILTER_SEARCH || ACTOR_SAU_GEN">
     <app-movie-list #listaRezultat *ngIf="listaFilmeWikiData && listaFilmeWikiData.length > 0"
                     [listaFilmeWikiData]="listaFilmeWikiData"
                     [displayType]="DISPLAY_TYPE.CARDS"
