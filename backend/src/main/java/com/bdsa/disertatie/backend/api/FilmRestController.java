@@ -177,11 +177,11 @@ public class FilmRestController {
     }
 
     @GetMapping(value = "/model-recomandari-filme")
-    public ResponseEntity<String> getFilmeDinModelMachineLearningRecomandari (@RequestParam(name = "user_id", required = false) Long userId) throws OrtException {
+    public ResponseEntity<List<FilmWikiData>> getFilmeDinModelMachineLearningRecomandari (@RequestParam(name = "user_id", required = false) Long userId) throws OrtException, JsonProcessingException {
         LOG.info("GET filme din Model Machine Learning Recomandari");
 
-        modelRecomandariService.getRecomandariFilme(userId);
+        List<FilmWikiData> filmeRecomandate = modelRecomandariService.getRecomandariFilme(userId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(filmeRecomandate);
     }
 }

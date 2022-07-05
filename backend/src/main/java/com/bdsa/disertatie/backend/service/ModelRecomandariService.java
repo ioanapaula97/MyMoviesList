@@ -1,10 +1,13 @@
 package com.bdsa.disertatie.backend.service;
 
 import ai.onnxruntime.*;
+import com.bdsa.disertatie.backend.dto.FilmRecomandat;
+import com.bdsa.disertatie.backend.dto.FilmWikiData;
 import com.bdsa.disertatie.backend.entity.Film;
 import com.bdsa.disertatie.backend.entity.Utilizator;
 import com.bdsa.disertatie.backend.repository.FilmRepository;
 import com.bdsa.disertatie.backend.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +32,16 @@ public class ModelRecomandariService {
 
     private FilmRepository filmRepository;
     private UserRepository userRepository;
+    private FilmWikidataService filmWikidataService;
 
     @Value("#{${mapaCoduriModelRecomandariSiWikidata}}")
     private Map<String,String> mapaCoduriModelRecomandariSiWikidata;
 
     @Autowired
-    public ModelRecomandariService(FilmRepository filmRepository, UserRepository userRepository) {
+    public ModelRecomandariService(FilmRepository filmRepository, UserRepository userRepository, FilmWikidataService filmWikidataService) {
         this.filmRepository = filmRepository;
         this.userRepository = userRepository;
+        this.filmWikidataService = filmWikidataService;
     }
 
     @PostConstruct
@@ -54,10 +59,10 @@ public class ModelRecomandariService {
         }
     }
 
-    public void getRecomandariFilme(Long userId) throws OrtException {
+    public List<FilmWikiData> getRecomandariFilme(Long userId) throws OrtException, JsonProcessingException {
 //        List<Integer> userIds = new ArrayList<>(Arrays.asList(1,1,1,1,1,1));
 //        List<Integer> filmeIds = new ArrayList<>(Arrays.asList(8,143,175,285,203,400));
-        Utilizator utilizator = userRepository.getById(userId);
+        Utilizator utilizator = userRepository.findById(userId).get();
 
         List<String> coduriWikiDataFilmeVazute = filmRepository.findAllByUtilizator(utilizator)
                 .stream().map(Film::getCodWikiData).collect(Collectors.toList());
@@ -65,30 +70,24 @@ public class ModelRecomandariService {
         List<Float> idsModelRecomandariFilmeNevazute = new ArrayList<>();
         List<Float> userIds = new ArrayList<>();
 
+        //construire lista id-uri filme nevazute
         for (Map.Entry<String, String> entry : mapaCoduriModelRecomandariSiWikidata.entrySet()) {
             String codWikiData = entry.getValue();
             if (!coduriWikiDataFilmeVazute.contains(codWikiData)) {
                 idsModelRecomandariFilmeNevazute.add(Float.parseFloat(entry.getKey()));
-               userIds.add(0f); // (id-ul din modelul de recomandari)
+                userIds.add(0f); // (id-ul din modelul de recomandari)
             }
         }
 
         Map<String, OnnxTensor> container = new HashMap<>();
 
-//        FloatBuffer idsUseriBuffer = FloatBuffer.allocate(userIds.size());
-//        for (float userId: userIds) idsUseriBuffer.put(userId);
-//        OnnxTensor iduriUseriTensor = OnnxTensor.createTensor(env, idsUseriBuffer , new long[]{userIds.size(),1});
-
+        //creare tensor vector utilizatori
         float[] arrayUseri = new float[userIds.size()];
         for(int i = 0; i < userIds.size(); i++) arrayUseri[i] = userIds.get(i);
         final FloatBuffer idsUseriBuffer = FloatBuffer.wrap(arrayUseri,0,userIds.size()).asReadOnlyBuffer();
         OnnxTensor iduriUseriTensor = OnnxTensor.createTensor(env, idsUseriBuffer , new long[]{userIds.size(),1});
 
-
-//        FloatBuffer idsFilmeBuffer = FloatBuffer.allocate(userIds.size());
-//        for (int filmId: filmeIds) idsFilmeBuffer.put(filmId);
-//        OnnxTensor iduriFilmeTensor = OnnxTensor.createTensor(env, idsFilmeBuffer , new long[]{userIds.size(),1});
-
+        //creare tensor vector id-uri filme
         float[] arrayFilme = new float[idsModelRecomandariFilmeNevazute.size()];
         for(int i = 0; i < idsModelRecomandariFilmeNevazute.size(); i++) arrayFilme[i] = idsModelRecomandariFilmeNevazute.get(i);
         final FloatBuffer idsFilmeBuffer = FloatBuffer.wrap(arrayFilme,0,idsModelRecomandariFilmeNevazute.size()).asReadOnlyBuffer();
@@ -97,19 +96,38 @@ public class ModelRecomandariService {
         container.put("user", iduriUseriTensor);
         container.put("movie", iduriFilmeTensor);
 
-        // Run the inference
+        float[][] resultValues = null;
+        // Run the inference (apelare model recomandari)
         try (OrtSession.Result results = session.run(container)) {
 
             LOG.info("Outputs: {}", results.get(0).getValue());
-            // Only iterates once
-            for (Map.Entry<String, OnnxValue> r : results) {
-                OnnxValue resultValue = r.getValue();
-                OnnxTensor resultTensor = (OnnxTensor) resultValue;
-                resultTensor.getValue();
-                LOG.info("Output Name: {}", r.getKey());
-                LOG.info("Output Value: {}, {}", r.getValue(), resultTensor);
-                LOG.info("Output Value: {}, {}", r.getValue(), resultTensor);
+            resultValues = ((float[][])results.get("dense_3").get().getValue());
+        }
+
+        return prelucrareOutputModelRecomandari(resultValues, arrayFilme);
+    }
+
+    List<FilmWikiData> prelucrareOutputModelRecomandari(float[][] resultValues, float[] arrayFilmeInput) throws JsonProcessingException {
+        List<FilmRecomandat> filmeRecomandate =  new ArrayList<>();
+
+        //construire lista cu id-uri wikidata si scor in functie de id-ul asociat din model
+        if(resultValues != null) {
+            for(int i=0; i< resultValues.length; i++){
+                FilmRecomandat filmRecomandat = new FilmRecomandat();
+                filmRecomandat.setScorModel(resultValues[i][0]);
+                filmRecomandat.setCodWikiData(mapaCoduriModelRecomandariSiWikidata.get(String.valueOf((int)arrayFilmeInput[i])));
+                filmeRecomandate.add(filmRecomandat);
             }
         }
+
+        //sortare descrescator dupa scor
+        Collections.sort(filmeRecomandate, Comparator.comparing(FilmRecomandat::getScorModel).reversed());
+
+        //preluare date de la wikidata despre filmele recomandate
+        List<FilmWikiData> filmeWikiData = filmWikidataService
+                .getFilmeDupaListaCoduri(filmeRecomandate.stream().map(FilmRecomandat::getCodWikiData).limit(5).collect(Collectors.toList()));
+
+        //returnez primele 10 filme gasite
+        return filmeWikiData.stream().limit(10).collect(Collectors.toList());
     }
 }
