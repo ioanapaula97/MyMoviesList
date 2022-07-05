@@ -147,10 +147,10 @@ export class MovieFiltersComponent implements OnInit {
       // if(this.anSelectat) console.log("anSelectat in if ", this.anSelectat);
       // else{ console.log("anSelectat in else ", this.anSelectat);}
 
-      let filtreActive = this.router.url.split('search')[1];
+      let filtreActive = this.router.url.split('search')[1] || '';
       console.log('filtreActive: ', filtreActive);
+      this.seteazaTipRaspuns(filtreActive);
       if(filtreActive){
-        this.seteazaTipRaspuns(filtreActive);
         this.getData(filtreActive);
       }
     });
@@ -186,6 +186,22 @@ export class MovieFiltersComponent implements OnInit {
       }
       this.ACTOR_SAU_GEN = true;
       this.FILTER_SEARCH = false;
+      this.QUESTION_SEARCH = false;
+      this.raspunsIntrebare = undefined;
+      this.listaFilmeWikiData = [];
+
+      this.genuriSelectate = [];
+      this.anSelectat = Number.parseInt('');
+      this.scorSelectat = Number.parseInt('');
+      this.sortareSelectata = '';
+      this.yearPicked = undefined;
+    }
+
+    if(!filtreActive.includes('?')){
+      this.actorParam = undefined;
+      this.genParam = undefined;
+      this.ACTOR_SAU_GEN = false;
+      this.FILTER_SEARCH = true;
       this.QUESTION_SEARCH = false;
       this.raspunsIntrebare = undefined;
       this.listaFilmeWikiData = [];
