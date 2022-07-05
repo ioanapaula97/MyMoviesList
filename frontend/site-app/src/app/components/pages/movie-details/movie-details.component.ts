@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
+import {StatusFilmEnum} from "../../../model/StatusFilmEnum";
 
 @Component({
   selector: 'app-movie-details',
@@ -12,11 +13,13 @@ export class MovieDetailsComponent implements OnInit {
 
   filmSelectatWikiData: any;
 
-  optiuniNote: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  optiuniNote: number[] = [1, 2, 3, 4, 5];
 
   listaFilmeUtilizator: any[];
   coduriFilmeFavorite: string[];
   filmUtilizator: any;
+
+  STATUS_ENUM = StatusFilmEnum;
 
   constructor(private filmService: FilmService,
               private userService: UserService) {
@@ -31,12 +34,12 @@ export class MovieDetailsComponent implements OnInit {
   }
 
   getFilmeleUtilizatoruluiCurent() {
-    console.log("GET FILMELE USERULUI CURENT");
+    console.log("DETAILS - GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
       this.listaFilmeUtilizator = resp ? resp : [];
       this.coduriFilmeFavorite = Utils.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
       this.filmUtilizator = this.listaFilmeUtilizator.filter(f => f.codWikiData === this.filmSelectatWikiData.codWikiData)[0] || {};
-      console.log("filmUtilizator", this.filmUtilizator);
+      console.log("DETAILS - filmUtilizator", this.filmUtilizator);
     });
   }
 

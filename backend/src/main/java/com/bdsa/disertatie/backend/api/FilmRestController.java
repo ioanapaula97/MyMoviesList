@@ -48,7 +48,11 @@ public class FilmRestController {
         return ResponseEntity.ok().body(filmService.toateFilmeleUtilizatorului(userId));
     }
 
-
+    @GetMapping(value = "/wikidata")
+    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataDupaCoduri (@RequestParam(name = "coduriWikiData", required = false) List<String> coduriWikiData) throws JsonProcessingException {
+        LOG.info("GET Toate filmele de la WIKIDATA <<Dupa Coduri>>, coduri= {} ", coduriWikiData);
+        return ResponseEntity.ok().body(filmWikidataService.getFilmeDupaListaCoduri(coduriWikiData));
+    }
 
     @GetMapping(value = "/wikidata/top-scor")
     public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopScor () throws JsonProcessingException {

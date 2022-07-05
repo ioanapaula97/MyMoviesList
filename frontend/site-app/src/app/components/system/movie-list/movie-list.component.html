@@ -8,7 +8,7 @@
           <mat-card-title>
             <mat-chip color="accent" selected>{{film.scorReview}}</mat-chip>
             <div class="float-end mb-2">
-              <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent()"
+              <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent(false)"
                                    [filmCurent]="film"
                                    [coduriFilmeFavorite]="coduriFilmeFavorite">
               </app-favorite-button>
@@ -35,8 +35,8 @@
       <ng-container matColumnDef="favorit" *ngIf="displayType === DISPLAY_TYPE.LIST">
         <th mat-header-cell *matHeaderCellDef> </th>
         <td mat-cell *matCellDef="let element">
-          <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent()"
-                               [filmCurent]="element"
+          <app-favorite-button (statusFavoritChange)="getFilmeleUtilizatoruluiCurent(true)"
+                               [filmCurent]="getFilmUtilizator(element.codWikiData)"
                                [coduriFilmeFavorite]="coduriFilmeFavorite">
           </app-favorite-button>
         </td>
@@ -45,8 +45,8 @@
       <ng-container matColumnDef="statusFilm" *ngIf="displayType === DISPLAY_TYPE.STATUS_LIST ">
         <th mat-header-cell *matHeaderCellDef> Movie status</th>
         <td mat-cell *matCellDef="let element">
-          <app-status-dropdown [filmUtilizator]="element"
-                               (statusFavoritChange)="getFilmeleUtilizatoruluiCurent()">
+          <app-status-dropdown [filmUtilizator]="getFilmUtilizator(element.codWikiData)"
+                               (statusFilmChange)="getFilmeleUtilizatoruluiCurent(true)">
 
           </app-status-dropdown>
         </td>
@@ -54,7 +54,11 @@
 
       <ng-container matColumnDef="titlu">
         <th mat-header-cell *matHeaderCellDef> Title </th>
-        <td mat-cell *matCellDef="let element"> {{element.titlu}} </td>
+        <td mat-cell *matCellDef="let element">
+          <a (click)="setFilmSelectat(element)" [routerLink]="'/movie-details/' + element.codWikiData" class="link-info">
+            {{element.titlu}}
+          </a>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="anAparitie">

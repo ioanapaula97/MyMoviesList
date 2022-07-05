@@ -1,6 +1,7 @@
 package com.bdsa.disertatie.backend.service;
 
 import com.bdsa.disertatie.backend.dto.FilmDto;
+import com.bdsa.disertatie.backend.dto.UserDto;
 import com.bdsa.disertatie.backend.entity.Film;
 import com.bdsa.disertatie.backend.entity.Utilizator;
 import com.bdsa.disertatie.backend.enums.StatusFilmEnum;
@@ -87,6 +88,13 @@ public class FilmService {
 
 
     private FilmDto mapToDto(Film entity) {
-        return modelMapper.map(entity, FilmDto.class);
+        FilmDto filmDto = modelMapper.map(entity, FilmDto.class);
+        UserDto userDto= new UserDto();
+        userDto.setId(entity.getUtilizator().getId());
+        userDto.setCreated(entity.getUtilizator().getCreated());
+        userDto.setVersion(entity.getUtilizator().getVersion());
+        userDto.setUsername(entity.getUtilizator().getUsername());
+        filmDto.setUser(userDto);
+        return filmDto;
     }
 }

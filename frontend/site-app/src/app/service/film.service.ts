@@ -43,6 +43,10 @@ export class FilmService {
     return this.http.get('/api/v1/film/wikidata/cele-mai-noi');
   }
 
+  public getFilmeWikiDataDupaCoduri(coduriWikiData: number[]): Observable<any> {
+    return this.http.get(`/api/v1/film/wikidata?coduriWikiData=${coduriWikiData}`);
+  }
+
   public getFilmeleUtilizatorului(userId: number): Observable<any> {
     return this.http.get(`/api/v1/film/toate-ale-utilizatorului/${userId}`);
   }

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
+import {StatusFilmEnum} from "../../../model/StatusFilmEnum";
 
 @Component({
   selector: 'app-status-dropdown',
@@ -14,9 +15,9 @@ export class StatusDropdownComponent implements OnInit {
 
   optiuniFilmStatus: any[] = [
     {view: '', value: null},
-    {view: 'COMPLETED', value: 'COMPLETED'},
-    {view: 'PLAN TO WATCH', value: 'PLAN_TO_WATCH'},
-    {view: 'WATCHING', value: 'WATCHING'}
+    {view: 'COMPLETED', value: StatusFilmEnum.COMPLETED},
+    {view: 'PLAN TO WATCH', value: StatusFilmEnum.PLAN_TO_WATCH},
+    {view: 'WATCHING', value: StatusFilmEnum.WATCHING}
   ];
 
   constructor(private filmService: FilmService,

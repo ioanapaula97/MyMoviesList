@@ -1,10 +1,11 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {FilmService} from "../../../service/film.service";
 import {UserService} from "../../../service/user.service";
 import {Utils} from "../../../utils/Utils";
 import {MatTableDataSource} from "@angular/material/table";
 import {MoviesListDisplayTypeEnum} from "../../../model/MoviesListDisplayTypeEnum";
+import {StatusFilmEnum} from "../../../model/StatusFilmEnum";
 
 @Component({
   selector: 'app-movie-list',
@@ -17,6 +18,7 @@ export class MovieListComponent implements OnInit {
   @Input() pageSize: number | undefined;
   @Input() colMd: string | undefined;
   @Input() listaFilmeWikiData: any[];
+  @Output() elementeListaChange = new EventEmitter<any | undefined>();
   listaFilmeUtilizator: any[];
   coduriFilmeFavorite: string[];
 
@@ -26,12 +28,6 @@ export class MovieListComponent implements OnInit {
 
   tableDataSource: any;
   displayedColumns: string[] | undefined;
-  filmStatusEnum: any[] = [
-    {view: '', value: null},
-    {view: 'COMPLETED', value: 'COMPLETED'},
-    {view: 'PLAN TO WATCH', value: 'PLAN_TO_WATCH'},
-    {view: 'WATCHING', value: 'WATCHING'}
-  ];
 
   DISPLAY_TYPE = MoviesListDisplayTypeEnum;
 
@@ -43,7 +39,7 @@ export class MovieListComponent implements OnInit {
     if(!this.colMd) this.colMd = 'col-md-2';
     this.displayedColumns = this.displayType === this.DISPLAY_TYPE.LIST ? ['favorit', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ]
       : ['statusFilm', 'titlu', 'scorReview', 'anAparitie', 'durata', 'genuri' ];
-    this.getFilmeleUtilizatoruluiCurent();
+    this.getFilmeleUtilizatoruluiCurent(false);
     this.initPaginatorAndMatTable();
   }
 
@@ -67,14 +63,24 @@ export class MovieListComponent implements OnInit {
     Utils.setFilmWikiDataSelectatInLocalStorage(film);
   }
 
-  getFilmeleUtilizatoruluiCurent() {
-    console.log("GET FILMELE USERULUI CURENT");
+  getFilmeleUtilizatoruluiCurent(emitChangeEvent: boolean) {
+    console.log("MOVIE LIST - GET FILMELE USERULUI CURENT");
     this.filmService.getFilmeleUtilizatorului(this.userService.getIdUtilizatorCurent()).subscribe((resp) => {
       this.listaFilmeUtilizator = resp ? resp : [];
       this.coduriFilmeFavorite = Utils.getCoduriFilmeFavorite(this.listaFilmeUtilizator);
-      console.log("listaFilmeUtilizator=", this.listaFilmeUtilizator);
-      console.log("coduriFilmeFavorite=", this.coduriFilmeFavorite);
+      console.log("MOVIE LIST - listaFilmeUtilizator=", this.listaFilmeUtilizator);
+      console.log("MOVIE LIST - coduriFilmeFavorite=", this.coduriFilmeFavorite);
+
+      if(emitChangeEvent){
+        this.elementeListaChange.emit({elementeModificate: true});
+      }
+
     });
   }
+
+  getFilmUtilizator(codWikiData:string){
+    return this.listaFilmeUtilizator.filter(f => f.codWikiData === codWikiData)[0] || {};
+  }
+
 
 }
