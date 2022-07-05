@@ -1,0 +1,6 @@
+<mat-form-field appearance="fill" class="mt-3">
+  <mat-label>Change movie status: </mat-label>
+  <mat-select [(value)]="filmUtilizator.statusFilm" (selectionChange)="onStatusChange($event)">
+    <mat-option *ngFor="let option of optiuniFilmStatus" [value]="option.value">{{option.view}}</mat-option>
+  </mat-select>
+</mat-form-field>

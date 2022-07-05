@@ -32,6 +32,7 @@ import {CommonModule} from "@angular/common";
 import {MatTableModule} from "@angular/material/table";
 import {MatTabsModule} from "@angular/material/tabs";
 import { MovieGenreListComponent } from './components/system/movie-genre-list/movie-genre-list.component';
+import { StatusDropdownComponent } from './components/system/status-dropdown/status-dropdown.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { MovieGenreListComponent } from './components/system/movie-genre-list/mo
     MovieFiltersComponent,
     FavoriteButtonComponent,
     UserProfileComponent,
-    MovieGenreListComponent
+    MovieGenreListComponent,
+    StatusDropdownComponent
   ],
   imports: [
     BrowserModule,

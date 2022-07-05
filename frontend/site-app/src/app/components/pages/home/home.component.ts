@@ -12,9 +12,9 @@ import {GoogleOauthService} from "../../../service/google-oauth.service";
 })
 export class HomeComponent implements OnInit {
 
-  listaFilmeRecomandate: any[] = [];
-  listaFilmeTopScor: any[] = [];
-  listaFilmeCeleMaiNoi: any[] = [];
+  listaFilmeRecomandate: any[];
+  listaFilmeTopScor: any[];
+  listaFilmeCeleMaiNoi: any[];
 
   emailUserCurent: string;
   emailUserInLocalStorage: string;

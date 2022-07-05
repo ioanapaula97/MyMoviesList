@@ -3,21 +3,21 @@
 
   <div class="card border-2 p-2 mb-4">
     <h2>Recommended for you:</h2>
-    <app-movie-list *ngIf="listaFilmeRecomandate"
+    <app-movie-list *ngIf="listaFilmeRecomandate && listaFilmeRecomandate.length > 0"
                     [listaFilmeWikiData]="listaFilmeRecomandate"
                     [displayType]="DISPLAY_TYPE.CARDS"></app-movie-list>
   </div>
 
   <div class="card border-2 p-2 mb-4">
     <h2>Top movies by score:</h2>
-    <app-movie-list *ngIf="listaFilmeTopScor"
+    <app-movie-list *ngIf="listaFilmeTopScor && listaFilmeTopScor.length > 0"
                     [listaFilmeWikiData]="listaFilmeTopScor"
                     [displayType]="DISPLAY_TYPE.CARDS"></app-movie-list>
   </div>
 
   <div class="card border-2 p-2">
     <h2>Newest movies:</h2>
-    <app-movie-list *ngIf="listaFilmeCeleMaiNoi"
+    <app-movie-list *ngIf="listaFilmeCeleMaiNoi && listaFilmeCeleMaiNoi.length > 0"
                     [listaFilmeWikiData]="listaFilmeCeleMaiNoi"
                     [displayType]="DISPLAY_TYPE.CARDS"></app-movie-list>
   </div>

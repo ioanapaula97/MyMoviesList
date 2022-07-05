@@ -11,12 +11,7 @@ import {Utils} from "../../../utils/Utils";
 export class MovieDetailsComponent implements OnInit {
 
   filmSelectatWikiData: any;
-  filmStatusEnum: any[] = [
-    {view: '', value: null},
-    {view: 'COMPLETED', value: 'COMPLETED'},
-    {view: 'PLAN TO WATCH', value: 'PLAN_TO_WATCH'},
-    {view: 'WATCHING', value: 'WATCHING'}
-  ];
+
   optiuniNote: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   listaFilmeUtilizator: any[];
@@ -43,13 +38,6 @@ export class MovieDetailsComponent implements OnInit {
       this.filmUtilizator = this.listaFilmeUtilizator.filter(f => f.codWikiData === this.filmSelectatWikiData.codWikiData)[0] || {};
       console.log("filmUtilizator", this.filmUtilizator);
     });
-  }
-
-  onStatusChange($event: any) {
-    console.log("onStatusChange $event=", $event);
-    console.log("onStatusChange this.filmUtilizator=", this.filmUtilizator);
-    this.filmService.schimbaStatusFilm(this.userService.getIdUtilizatorCurent(), this.filmSelectatWikiData.codWikiData, $event.value)
-      .subscribe(res => this.getFilmeleUtilizatoruluiCurent());
   }
 
   onNotaChange($event: any) {
