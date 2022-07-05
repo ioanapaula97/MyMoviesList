@@ -1,3 +1,5 @@
 <mat-chip-list aria-label="Genuri film" *ngIf="film">
-  <mat-chip *ngFor="let gen of film.genuri"><a [routerLink]="'/movie-details/' + film.codWikiData">{{gen.denumireGen}}</a></mat-chip>
+  <mat-chip *ngFor="let gen of film.genuri" (click)="cautaFilmeDupaGenulSelectat(gen)" class="nav-link">
+    <a>{{gen.denumireGen}}</a>
+  </mat-chip>
 </mat-chip-list>

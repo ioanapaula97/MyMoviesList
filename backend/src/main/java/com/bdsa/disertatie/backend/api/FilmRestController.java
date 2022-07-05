@@ -66,67 +66,21 @@ public class FilmRestController {
         return ResponseEntity.ok().body(filmWikidataService.getFilmeCeleMaiNoi());
     }
 
-//    @GetMapping(value = "/toate-paginate")
-//    public ResponseEntity<Page<FilmDto>> toateFilmelePaginate(Pageable pageable,
-//                                                              @RequestParam(value = "text", required = false, defaultValue = "")
-//                                                              @Pattern(regexp = RegExpValidation.TEXT_CAUTARE)
-//                                                              String textCautare){
-//        LOG.info("Toate filmele paginate");
-//        Page<FilmDto> pagina= new PageImpl<>(Collections.emptyList(), pageable, Collections.emptyList().size());
-//
-//        return ResponseEntity.ok().body(pagina);
-//    }
-
-//    @GetMapping(value = "/wikidata/top-box-office")
-//    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataTopBoxOffice () throws JsonProcessingException {
-//        LOG.info("GET Toate filmele de la WIKIDATA <<Top Box Office>> ");
-//
-//        List<FilmWikiData> filmeWikiData;
-//
-//        filmeWikiData = filmWikidataService.getFilmeTopBoxOffice();
-//
-//        return ResponseEntity.ok().body(filmeWikiData);
-//    }
-
-
-
     @GetMapping(value = "/wikidata/filtre")
     public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataFiltre (@RequestParam(name = "GENRES", required = false) List<String> genuri,
                                                                       @RequestParam(name = "YEAR", required = false) Integer an,
                                                                       @RequestParam(name = "SCORE", required = false) Integer scor,
-                                                                      @RequestParam(name = "SORT", required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-        LOG.info("GET Toate filmele de la WIKIDATA dupa filtre, genuri= {}, an= {}, scor={}, tipSortare= {}", genuri, an, scor, tipSortare);
+                                                                      @RequestParam(name = "SORT", required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare,
+                                                                      @RequestParam(name = "GEN", required = false) String gen,
+                                                                      @RequestParam(name = "ACTOR", required = false) String actor) throws JsonProcessingException {
+        LOG.info("GET Toate filmele de la WIKIDATA dupa filtre, genuri= {}, an= {}, scor={}, tipSortare= {}, gen= {}, actor= {}",
+                genuri, an, scor, tipSortare, gen, actor);
         List<FilmWikiData> filmeWikiData = new ArrayList<>();
 
 //        filmeWikiData = filmWikidataService.getFilmeDupaGen(genuri, tipSortare);
 
         return ResponseEntity.ok().body(filmeWikiData);
     }
-
-//    @GetMapping(value = "/wikidata/an-aparitie")
-//    public ResponseEntity<List<FilmWikiData>> getFilmeWikiDataAnAparitie (@RequestParam(required = false) Integer anAparitie,
-//                                                                          @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-//        LOG.info("GET Toate filmele de la WIKIDATA dupa anAparitie= {}, tipSortare= {}", anAparitie, tipSortare);
-//        List<FilmWikiData> filmeWikiData;
-//
-//        filmeWikiData = filmWikidataService.getFilmeDupaAnAparitie(anAparitie, tipSortare);
-//
-//        return ResponseEntity.ok().body(filmeWikiData);
-//    }
-//
-//    @GetMapping(value = "/wikidata/varsta")
-//    public ResponseEntity<List<FilmWikiData>> getFilmeDupaVarstaPermisa (@RequestParam(required = false) String varsta,
-//                                                                         @RequestParam(required = false, defaultValue = "SCOR_DESC") TipSortareEnum tipSortare) throws JsonProcessingException {
-//        LOG.info("GET Toate filmele de la WIKIDATA dupa varsta= {}, tipSortare= {}", varsta, tipSortare);
-//        List<FilmWikiData> filmeWikiData;
-//
-//        filmeWikiData = filmWikidataService.getFilmeDupaVarstaPermisa(varsta, tipSortare);
-//
-//        return ResponseEntity.ok().body(filmeWikiData);
-//    }
-
-
-
 
 
     @PostMapping(value = "/adauga-favorit/{userId}/{codFilmWikiData}")

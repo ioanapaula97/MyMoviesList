@@ -3,5 +3,7 @@ export enum QueryParamsEnum{
   YEAR      = "YEAR",
   SCORE     = "SCORE",
   SORT      = "SORT",
-  QUESTION  = "QUESTION"
+  QUESTION  = "QUESTION",
+  GEN       = "GEN",
+  ACTOR     = "ACTOR"
 }

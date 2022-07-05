@@ -1,56 +1,63 @@
 <div class="m-5">
-  <h1> Ask a question about a movie:</h1>
+  <ng-container *ngIf="ACTOR_SAU_GEN">
+    <h1>This are other movies with the genre: <span class="fw-bold">{{genParam.denumireGen}}</span></h1>
+  </ng-container>
 
-  <mat-form-field appearance="fill" class="w-50">
+  <ng-container *ngIf="!ACTOR_SAU_GEN">
+    <h1> Ask a question about a movie:</h1>
+
+    <mat-form-field appearance="fill" class="w-50">
     <textarea matInput  rows="3" [(ngModel)]="intrebare" (input)="textareaChange($event)">
     </textarea>
-  </mat-form-field>
+    </mat-form-field>
 
-  <div class="d-inline-block w-50 ps-2">
-    <button mat-raised-button color="accent" (click)="adaugaIntrebareInUrlSiSchimbaRuta()">Answer</button>
-     OR ask a vocal question:
-    <button mat-fab color="primary" aria-label="Ask vocal question" class="ms-5">
-      <mat-icon>keyboard_voice</mat-icon>
-    </button>
-  </div>
+    <div class="d-inline-block w-50 ps-2">
+      <button mat-raised-button color="accent" (click)="adaugaIntrebareInUrlSiSchimbaRuta()">Answer</button>
+      OR ask a vocal question:
+      <button mat-fab color="primary" aria-label="Ask vocal question" class="ms-5">
+        <mat-icon>keyboard_voice</mat-icon>
+      </button>
+    </div>
 
 
-  <h1> Search a movie:</h1>
+    <h1> Search a movie:</h1>
 
-  <mat-form-field appearance="fill" class="mt-3 w-50">
-    <mat-label>Select genre: </mat-label>
-    <mat-select multiple [(value)]="genuriSelectate" (selectionChange)="selectGen()">
-      <mat-option *ngFor="let option of genuriFilmOptions" [value]="option.value">{{option.view}}</mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="mt-3 w-50">
+      <mat-label>Select genre: </mat-label>
+      <mat-select multiple [(value)]="genuriSelectate" (selectionChange)="selectGen()">
+        <mat-option *ngFor="let option of genuriFilmOptions" [value]="option.value">{{option.view}}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="ps-3 w-25">
-    <mat-label>Select minimum release year:</mat-label>
-    <!--    <mat-select [(value)]="anSelectat">-->
-    <!--      <mat-option *ngFor="let option of anSelectatOptions" [value]="option.value">{{option.view}}</mat-option>-->
-    <!--    </mat-select>-->
-    <input matInput [(ngModel)]="yearPicked" [matDatepicker]="picker"/>
-    <mat-hint>YYYY</mat-hint>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)"></mat-datepicker>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="ps-3 w-25">
+      <mat-label>Select minimum release year:</mat-label>
+      <!--    <mat-select [(value)]="anSelectat">-->
+      <!--      <mat-option *ngFor="let option of anSelectatOptions" [value]="option.value">{{option.view}}</mat-option>-->
+      <!--    </mat-select>-->
+      <input matInput [(ngModel)]="yearPicked" [matDatepicker]="picker"/>
+      <mat-hint>YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)"></mat-datepicker>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill" class="ps-3 w-25">
-    <mat-label>Select minimum score:</mat-label>
-        <mat-select [(value)]="scorSelectat">
-          <mat-option *ngFor="let option of scorOptions" [value]="option.value">{{option.view}}</mat-option>
-        </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill" class="ps-3 w-25">
+      <mat-label>Select minimum score:</mat-label>
+      <mat-select [(value)]="scorSelectat">
+        <mat-option *ngFor="let option of scorOptions" [value]="option.value">{{option.view}}</mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <br>
-  <mat-form-field appearance="fill" class="mt-3 w-25">
-    <mat-label>Order by: </mat-label>
-    <mat-select [(value)]="sortareSelectata">
-      <mat-option *ngFor="let option of sortareOptions" [value]="option.value">{{option.view}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <br>
-  <button mat-raised-button color="warn" (click)="adaugaFiltreInUrlSiSchimbaRuta()">Search</button>
+    <br>
+    <mat-form-field appearance="fill" class="mt-3 w-25">
+      <mat-label>Order by: </mat-label>
+      <mat-select [(value)]="sortareSelectata">
+        <mat-option *ngFor="let option of sortareOptions" [value]="option.value">{{option.view}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
+    <button mat-raised-button color="warn" (click)="adaugaFiltreInUrlSiSchimbaRuta()">Search</button>
+  </ng-container>
+
 
   <h1 class="mt-3">Result: </h1>
   <div *ngIf="FILTER_SEARCH">

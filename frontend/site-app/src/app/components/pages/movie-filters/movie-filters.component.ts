@@ -91,6 +91,9 @@ export class MovieFiltersComponent implements OnInit {
 
   FILTER_SEARCH: boolean = false;
   QUESTION_SEARCH: boolean = false;
+  ACTOR_SAU_GEN: boolean = false;
+  genParam: any;
+  actorParam: any;
 
   genuriSelectate: string[] = [];
   anSelectat: any;
@@ -132,10 +135,15 @@ export class MovieFiltersComponent implements OnInit {
       this.scorSelectat = Number.parseInt((params[QueryParamsEnum.SCORE] || ''));
       this.sortareSelectata = (params[QueryParamsEnum.SORT] || '') || '';
 
+      this.genParam = Utils.getGenSelectatDinLocalStorage() || {};
+      this.actorParam = (params[QueryParamsEnum.ACTOR] || '') || {};
+
       console.log("genuriSelectate= ", this.genuriSelectate);
       console.log("anSelectat= ", this.anSelectat);
       console.log("scorSelectat= ", this.scorSelectat);
       console.log("sortareSelectata= ", this.sortareSelectata);
+      console.log("genParam= ", this.genParam);
+      console.log("actorParam= ", this.actorParam);
       // if(this.anSelectat) console.log("anSelectat in if ", this.anSelectat);
       // else{ console.log("anSelectat in else ", this.anSelectat);}
 
@@ -149,15 +157,31 @@ export class MovieFiltersComponent implements OnInit {
   }
 
   seteazaTipRaspuns(filtreActive: string){
-    if(filtreActive.includes(QueryParamsEnum.GENRES) || filtreActive.includes(QueryParamsEnum.YEAR) ||
-       filtreActive.includes(QueryParamsEnum.SCORE) || filtreActive.includes(QueryParamsEnum.SORT)){
+    if(filtreActive.includes(QueryParamsEnum.GENRES + '=') || filtreActive.includes(QueryParamsEnum.YEAR + '=') ||
+       filtreActive.includes(QueryParamsEnum.SCORE + '=') || filtreActive.includes(QueryParamsEnum.SORT + '=')){
+      this.ACTOR_SAU_GEN = false;
       this.FILTER_SEARCH = true;
       this.QUESTION_SEARCH = false;
       this.raspunsIntrebare = undefined;
     }
-    if(filtreActive.includes(QueryParamsEnum.QUESTION)){
+    if(filtreActive.includes(QueryParamsEnum.QUESTION + '=')){
+      this.ACTOR_SAU_GEN = false;
       this.FILTER_SEARCH = false;
       this.QUESTION_SEARCH = true;
+      this.listaFilmeWikiData = [];
+
+      this.genuriSelectate = [];
+      this.anSelectat = Number.parseInt('');
+      this.scorSelectat = Number.parseInt('');
+      this.sortareSelectata = '';
+      this.yearPicked = undefined;
+    }
+
+    if(filtreActive.includes(QueryParamsEnum.GEN + '=') || filtreActive.includes(QueryParamsEnum.ACTOR + '=')){
+      this.ACTOR_SAU_GEN = true;
+      this.FILTER_SEARCH = false;
+      this.QUESTION_SEARCH = false;
+      this.raspunsIntrebare = undefined;
       this.listaFilmeWikiData = [];
 
       this.genuriSelectate = [];

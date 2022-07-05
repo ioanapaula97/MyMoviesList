@@ -19,6 +19,24 @@ export class Utils{
     return coduriFavorite;
   }
 
+  public static setGenSelectatInLocalStorage(gen: any) {
+    localStorage.setItem('genSelectat', JSON.stringify(gen));
+  }
+
+  public static getGenSelectatDinLocalStorage(): any{
+    let genStr: string = localStorage.getItem('genSelectat') || '{}';
+    return JSON.parse(genStr) as Object;
+  }
+
+  public static setActorSelectatInLocalStorage(actor: any) {
+    localStorage.setItem('actorSelectat', JSON.stringify(actor));
+  }
+
+  public static getActorSelectatDinLocalStorage(): any{
+    let actorStr: string = localStorage.getItem('actorSelectat') || '{}';
+    return JSON.parse(actorStr) as Object;
+  }
+
   public static setFilmWikiDataSelectatInLocalStorage(film: any) {
     localStorage.setItem('filmSelectatWikiData', JSON.stringify(film));
   }
