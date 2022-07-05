@@ -132,6 +132,10 @@ export class MovieFiltersComponent implements OnInit {
       console.log("params= ", params);
       this.genuriSelectate = (params[QueryParamsEnum.GENRES] || '').split(',');
       this.anSelectat = Number.parseInt((params[QueryParamsEnum.YEAR] || ''));
+      if(this.anSelectat){
+        let year = new Date(); year.setFullYear(this.anSelectat, 1, 1);
+        this.yearPicked =  year;
+      }
       this.scorSelectat = Number.parseInt((params[QueryParamsEnum.SCORE] || ''));
       this.sortareSelectata = (params[QueryParamsEnum.SORT] || '') || '';
 
@@ -149,6 +153,7 @@ export class MovieFiltersComponent implements OnInit {
 
       let filtreActive = this.router.url.split('search')[1] || '';
       console.log('filtreActive: ', filtreActive);
+
       this.seteazaTipRaspuns(filtreActive);
       if(filtreActive){
         this.getData(filtreActive);
@@ -252,15 +257,15 @@ export class MovieFiltersComponent implements OnInit {
     }
 
     if (this.anSelectat) {
-      urlCuFiltreActive.includes('?') ? urlCuFiltreActive += '&' : '?';
+      urlCuFiltreActive += urlCuFiltreActive.includes('?') ?  '&' : '?';
       urlCuFiltreActive += (QueryParamsEnum.YEAR + '=' + this.anSelectat);
     }
     if (this.scorSelectat) {
-      urlCuFiltreActive.includes('?') ? urlCuFiltreActive += '&' : '?';
+      urlCuFiltreActive += urlCuFiltreActive.includes('?') ? '&' : '?';
       urlCuFiltreActive += (QueryParamsEnum.SCORE + '=' + this.scorSelectat);
     }
     if (this.sortareSelectata) {
-      urlCuFiltreActive.includes('?') ? urlCuFiltreActive += '&' : '?';
+      urlCuFiltreActive += urlCuFiltreActive.includes('?') ? '&' : '?';
       urlCuFiltreActive += (QueryParamsEnum.SORT + '=' + this.sortareSelectata);
     }
 
@@ -274,5 +279,10 @@ export class MovieFiltersComponent implements OnInit {
     this.anSelectat = (new Date(this.yearPicked)).getFullYear();
     // input._destroyPopup();
     this.picker.close();
+  }
+
+  clearYearPicked() {
+    this.yearPicked = undefined;
+    this.anSelectat = Number.parseInt('');
   }
 }

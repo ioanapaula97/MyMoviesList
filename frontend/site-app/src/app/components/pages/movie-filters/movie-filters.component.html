@@ -38,6 +38,9 @@
       <input matInput [(ngModel)]="yearPicked" [matDatepicker]="picker"/>
       <mat-hint>YYYY</mat-hint>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle matSuffix (click)="clearYearPicked()">
+        <mat-icon matDatepickerToggleIcon>clear</mat-icon>
+      </mat-datepicker-toggle>
       <mat-datepicker #picker startView="multi-year" (yearSelected)="chosenYearHandler($event, picker)"></mat-datepicker>
     </mat-form-field>
 
