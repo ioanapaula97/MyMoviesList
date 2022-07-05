@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,8 +26,18 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public UserDto getUserDupaAdresaDeEmail(String adresaEmail){
-        return mapToDto(userRepository.findByUsername(adresaEmail));}
+    public UserDto getUserDupaAdresaEmailSauSalveazaNouUser(String adresaEmail){
+        Utilizator entity = userRepository.findByUsername(adresaEmail);
+
+        if(entity == null) {
+            Utilizator nouUser = new Utilizator();
+            nouUser.setUsername(adresaEmail);
+            nouUser.setCreated(LocalDateTime.now());
+            nouUser.setVersion(LocalDateTime.now());
+            entity = this.userRepository.save(nouUser);
+        }
+        return mapToDto(entity);
+    }
 
     public UserDto mapToDto (Utilizator entity){
         return modelMapper.map(entity, UserDto.class);

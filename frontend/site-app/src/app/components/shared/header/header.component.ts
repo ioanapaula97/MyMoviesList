@@ -3,6 +3,7 @@ import {GoogleOauthService} from "../../../service/google-oauth.service";
 import {GoogleUser} from "../../../model/GoogleUser";
 import {Router} from "@angular/router";
 import {Utils} from "../../../utils/Utils";
+import {UserService} from "../../../service/user.service";
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,8 @@ export class HeaderComponent implements OnInit {
   constructor(private googleOAuthService: GoogleOauthService,
               private changeDetectorRef: ChangeDetectorRef,
               public router: Router,
-              private ngZone: NgZone) {}
+              private ngZone: NgZone,
+              private userService: UserService,) {}
 
   ngOnInit(): void {
     this.googleOAuthService.currentUserSubject.subscribe((user) =>{
@@ -23,7 +25,22 @@ export class HeaderComponent implements OnInit {
       console.log('HEADER currentUser=',this.currentUser);
       if(this.currentUser) Utils.setEmailUserCurentInLocalStorage(this.currentUser.email);
       this.changeDetectorRef.detectChanges();
+
+      this.salveazaUserDacaNuExista();
     });
+
+  }
+
+  salveazaUserDacaNuExista(){
+    if(this.currentUser){
+      this.userService.getUserDupaAdresaEmailSauSalveazaNouUser(this.currentUser.email).subscribe((res) =>{
+        console.log("HEADER - getUserDupaAdresaEmailSauSalveazaNouUser");
+        console.log("HEADER - USER DIN BAZA DE DATE= ", res);
+        if(res){
+          Utils.setIdUserCurentInLocalStorage('' + res.id);
+        }
+      });
+    }
 
   }
 

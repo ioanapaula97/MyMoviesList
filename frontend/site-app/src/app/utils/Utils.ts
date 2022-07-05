@@ -63,6 +63,14 @@ export class Utils{
     return  localStorage.getItem('emailUserCurent') || '';
   }
 
+  public static setIdUserCurentInLocalStorage(id: string) {
+    localStorage.setItem('idUserCurent', id);
+  }
+
+  public static getIdUserCurentDinLocalStorage(): number {
+    return  Number.parseInt(localStorage.getItem('idUserCurent') || '0');
+  }
+
   public static shuffleArray (array:any[]) {
     let currentIndex = array.length,  randomIndex;
 

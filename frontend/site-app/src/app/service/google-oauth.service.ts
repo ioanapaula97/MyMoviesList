@@ -40,6 +40,7 @@ export class GoogleOauthService {
   logOut() {
     this.googleAuth.signOut().then( () => {
       Utils.setEmailUserCurentInLocalStorage('none');
+      Utils.setIdUserCurentInLocalStorage('0');
       this.currentUser = undefined; this.currentUserSubject.next(undefined);
       this.ngZone.run(() => this.router.navigateByUrl("/login"));});}
 }
