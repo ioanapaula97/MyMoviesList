@@ -153,7 +153,7 @@ public class ModelQuestionAnsweringService {
 
         /* tensor length*/
         LongBuffer lengthBuffer = LongBuffer
-                .wrap(inputModelQA.getQuestion(), 0, inputModelQA.getLength().length).asReadOnlyBuffer();
+                .wrap(inputModelQA.getLength(), 0, inputModelQA.getLength().length).asReadOnlyBuffer();
         OnnxTensor lengthTensor = OnnxTensor.createTensor(env, lengthBuffer, new long[]{inputModelQA.getLength().length});
         container.put("length", lengthTensor);
 
