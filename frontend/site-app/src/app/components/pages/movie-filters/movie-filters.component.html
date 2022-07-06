@@ -72,7 +72,7 @@
                     [colMd]="'col-md-3'"></app-movie-list>
   </div>
   <div *ngIf="QUESTION_SEARCH" class="col-md-12 bg-light p-5">
-    <h3 *ngIf="raspunsIntrebare">{{raspunsIntrebare}}</h3>
+    <h3 *ngIf="raspunsIntrebare" [innerHTML]="raspunsIntrebare"></h3>
   </div>
 
 </div>

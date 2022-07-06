@@ -133,10 +133,9 @@ public class FilmRestController {
     public ResponseEntity<RaspunsModelQA> getRaspunsDinModelMachineLearningQA (@RequestParam(name = "QUESTION", required = false) String intrebare) throws OrtException {
         LOG.info("GET raspuns intrebare din Model Machine Learning QA , intrebare= {}", intrebare);
 
-        RaspunsModelQA raspunsModelQA= new RaspunsModelQA();
+        RaspunsModelQA raspunsModelQA = modelQuestionAnsweringService.getRaspunsIntrebare(intrebare);
 
-//        return ResponseEntity.ok().body(modelQuestionAnsweringService.getRaspunsIntrebare(intrebare));
-        raspunsModelQA.setRaspuns("raspuns " + LocalDateTime.now());
+//        raspunsModelQA.setRaspuns("raspuns " + LocalDateTime.now());
         return ResponseEntity.ok().body(raspunsModelQA);
     }
 
